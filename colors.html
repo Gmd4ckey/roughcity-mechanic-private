@@ -478,6 +478,7 @@ main {
 
 }
 </style>
+<link rel="stylesheet" href="shared-colors.css">
 </head>
 
 
@@ -526,6 +527,28 @@ main {
 
 
 <main>
+
+<section class="shared-panel" id="sharedPanel" aria-labelledby="sharedTitle">
+ <h2 id="sharedTitle">みんなで共有するカラー一覧</h2>
+ <p>このページを開いた全員がカラーを追加・編集できます。保存した内容は、他の人の画面にも反映されます。</p>
+ <p id="sharedStatus" role="status" aria-live="polite">共有保存先を確認しています…</p>
+ <div class="shared-actions"><button type="button" id="addTeam" disabled>＋ カラーを追加</button><button type="button" id="refreshColors" disabled>一覧を更新</button></div>
+ <form id="colorEditor" hidden>
+  <fieldset id="editorFieldset" style="border:0;padding:0;min-width:0">
+   <legend id="editorTitle">カラーを追加</legend>
+   <div class="editor-fields">
+    <label>分類<select id="teamCategory"><option value="gang">ギャング</option><option value="hangure">半グレ</option><option value="veteran">退役軍人</option><option value="doctor">個人医</option><option value="cartel">カルテル</option></select></label>
+    <label>チーム名・名称<input id="teamName" required maxlength="80"></label>
+    <label>カード表示色（HEX）<input id="teamDisplayColor" required maxlength="7" pattern="#[0-9a-fA-F]{6}" placeholder="#8c299c"></label>
+   </div>
+   <p>色名は自由に入力できます。RGBは「190, 72, 130」、HEXは「#BE4882」で入力すると色見本も表示します。各チーム12項目まで。</p>
+   <div id="editorColors"></div>
+   <div class="shared-actions"><button type="button" id="addColorRow">＋ 項目を追加</button><button type="submit">全員に共有して保存</button><button type="button" id="cancelColorEdit">キャンセル</button></div>
+  </fieldset>
+  <p id="editorStatus" role="status" aria-live="polite"></p>
+ </form>
+</section>
+
 
     <!-- 検索 -->
 
@@ -1544,5 +1567,8 @@ updateThemeButton();
 
 </script>
 
+<script src="colors-config.js"></script>
+<script src="color-store.js"></script>
+<script src="shared-colors.js"></script>
 </body>
 </html>
