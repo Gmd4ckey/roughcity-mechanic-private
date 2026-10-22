@@ -117,13 +117,14 @@
         if (saving || !loaded || (dirty && !confirm('編集中の入力を閉じて、別の編集を始めますか？'))) return;
         editing = team ? { id: team.id, version: team.version } : null;
         byId('editorTitle').textContent = team ? '登録カラーを編集' : '新しいカラーの内容';
+        byId('sharedTitle').textContent = team ? 'カラーを編集' : 'カラーを登録';
         byId('teamCategory').value = team?.category || 'gang';
         byId('teamName').value = team?.name || '';
         byId('teamDisplayColor').value = team?.card_color || '#8c299c';
         if (colorPicker) syncCardColor(byId('teamDisplayColor').value);
         rows.replaceChildren(); (team?.colors || [{ label: 'メイン' }, ...['サブ','パール','ホイール'].map(label => ({label, enabled:false}))]).forEach(addColorRow);
         dirty = false;
-        editorStatus.textContent = ''; form.hidden = false;
+        editorStatus.textContent = ''; panel.hidden = false; form.hidden = false;
         if (focus) { byId('teamName').focus(); form.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
     }
     async function refresh(manual = false) {
@@ -142,7 +143,10 @@
     addButton.addEventListener('click', () => openEditor());
     refreshButton.addEventListener('click', () => refresh(true));
     byId('addColorRow').addEventListener('click', () => { addColorRow(); rows.lastElementChild.open = true; dirty = true; });
-    byId('cancelColorEdit').addEventListener('click', () => openEditor());
+    byId('cancelColorEdit').addEventListener('click', () => {
+        if (saving || (dirty && !confirm('入力内容を破棄して閉じますか？'))) return;
+        dirty = false; form.hidden = true; panel.hidden = true; addButton.focus();
+    });
     form.addEventListener('submit', async event => {
         event.preventDefault(); if (saving || !store) return;
         try {
@@ -164,13 +168,12 @@
             saving = false; fieldset.disabled = false; addButton.disabled = !loaded;
             document.querySelectorAll('.edit-team').forEach(button => button.disabled = false);
         }
-        if (form.hidden) { await refresh(); openEditor(); editorStatus.textContent = '保存しました。一覧に反映されています。'; }
+        if (form.hidden) { panel.hidden = true; await refresh(); status.textContent = '保存しました。全員の一覧に共有されます。'; addButton.focus(); }
     });
     window.addEventListener('beforeunload', event => { if (dirty) { event.preventDefault(); event.returnValue = ''; } });
     try { store = new ColorStore.Store(window.COLOR_STORAGE); }
     catch (error) { status.textContent = error.message; refreshButton.disabled = true; return; }
     await refresh();
-    if (loaded) openEditor(null, false);
     setInterval(() => { if (!document.hidden) refresh(); }, 15000);
     window.addEventListener('online', () => refresh());
     document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });

@@ -24,9 +24,10 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 @media(max-width: 700px) { .editor-fields, .editor-color { grid-template-columns: 1fr; } }
 
 /* Registration workspace: list first, focused form alongside. */
-body.dark { --bg: #10151e; --panel: #1c2532; --panel2: #253143; --border: #364459; --button: #202c3c; --sub: #aebed4; }
-main { max-width: 1440px; margin: 0 auto; padding: 24px; }
-.colors-workspace { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(340px, 1fr); gap: 20px; align-items: start; }
+main { max-width: 1160px; margin: 0 auto; padding: 32px 24px; }
+.colors-workspace { display: flex; flex-direction: column; gap: 24px; }
+.colors-workspace > section { width: 100%; }
+#sharedPanel { order: -1; }
 .list-panel, #sharedPanel { padding: 22px; background: var(--panel); border: 1px solid var(--border); border-radius: 18px; min-width: 0; }
 .list-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .list-heading h2, #sharedTitle { font-size: 19px; margin: 0; }
@@ -37,7 +38,7 @@ main { max-width: 1440px; margin: 0 auto; padding: 24px; }
 .list-panel .search-wrap { margin: 18px 0 10px; }
 .category-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
 .category-filters button[aria-pressed="true"], #colorEditor button[type="submit"] { background: #777ef2; border-color: #777ef2; color: white; font-weight: 700; }
-.list-panel .team-grid { grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 14px; }
+.list-panel .team-grid { grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 18px; }
 .list-panel .color-section { margin-bottom: 22px; }
 .list-panel .section-title { font-size: 15px; margin: 18px 0 12px; }
 .list-panel .empty-message { padding: 85px 24px; border: 1px dashed var(--border); background: var(--panel2); border-radius: 12px; font-size: 14px; line-height: 1.9; text-align: center; }
@@ -45,7 +46,7 @@ main { max-width: 1440px; margin: 0 auto; padding: 24px; }
 .help-text { font-size: 12px; color: var(--sub); line-height: 1.8; }
 #colorEditor { margin-top: 18px; padding-top: 0; border-top: 0; }
 #editorTitle { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-#colorEditor .editor-fields { display: grid; grid-template-columns: 1fr; gap: 18px; }
+#colorEditor .editor-fields { display: grid; grid-template-columns: 1fr 2fr; gap: 18px; }
 #colorEditor label { font-size: 13px; font-weight: 600; }
 .required-hint { font-size: 11px; color: #9197ff; }
 #colorEditor input, #colorEditor select { font-size: 14px; min-height: 42px; }
@@ -53,7 +54,7 @@ main { max-width: 1440px; margin: 0 auto; padding: 24px; }
 details.card-color-editor > :not(summary) { margin-top: 12px; }
 summary { cursor: pointer; font-weight: 700; font-size: 13px; }
 .card-color-preview { height: 55px; }
-#editorColors { border: 1px solid var(--border); border-radius: 12px; padding: 10px; background: var(--panel2); margin: 18px 0; }
+#editorColors { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; margin: 24px 0; }
 #colorEditor .editor-color { display: block; padding: 14px; border: 1px solid var(--border); border-radius: 9px; background: var(--panel); margin-bottom: 8px; }
 .editor-color:last-child { margin-bottom: 0; }
 .editor-color > label, .editor-color > button { margin-top: 14px; }
@@ -64,3 +65,4 @@ summary { cursor: pointer; font-weight: 700; font-size: 13px; }
 .copy-button { cursor: pointer; margin-top: 6px; }
 .page-note { font-size: 11px; line-height: 1.7; }
 @media(max-width: 850px) { main { padding: 12px; } .colors-workspace { grid-template-columns: 1fr; } .list-panel, #sharedPanel { padding: 16px; } }
+@media(max-width: 650px) { #editorColors, #colorEditor .editor-fields { grid-template-columns: 1fr; } }
