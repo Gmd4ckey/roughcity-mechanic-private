@@ -111,3 +111,10 @@ header { min-height: 54px; padding: 8px 12px; gap: 12px; }
 @media (max-width: 440px) {
   .list-panel .team-grid { grid-template-columns: 1fr; }
 }
+.list-panel .team-colors { font-size: 12px; line-height: 1.35; }
+.list-panel .color-item:has(> .color-name) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 5px; align-items: center; }
+.list-panel .color-item > .color-label { grid-column: 1 / -1; }
+.list-panel .color-item > .color-name { display: block; }
+.list-panel .color-item > .copy-button { margin: 0; }
+.list-panel .color-label { line-height: 1.35; }
+.list-panel .team-name { line-height: 1.4; }
