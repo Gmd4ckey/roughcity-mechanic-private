@@ -1064,12 +1064,12 @@ function createTeamCard(team) {
                 color.name;
 
 
-            /*
-             色名にはコピーボタンを
-             あえて付けない
-            */
-
-            item.appendChild(value);
+            const copyButton = document.createElement("button");
+            copyButton.type = "button";
+            copyButton.className = "copy-button";
+            copyButton.textContent = "カラー名コピー";
+            copyButton.addEventListener("click", () => copyText(color.name, copyButton));
+            item.append(value, copyButton);
 
         }
 
