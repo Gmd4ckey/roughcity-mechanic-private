@@ -49,9 +49,32 @@
             button.disabled = saving;
             button.addEventListener('click', () => openEditor(team));
             card.append(button);
+            const remove = document.createElement('button');
+            remove.type = 'button'; remove.className = 'edit-team delete-team'; remove.textContent = '削除'; remove.disabled = saving;
+            remove.addEventListener('click', () => deleteTeam(team)); card.append(remove);
         }
         return card;
     };
+    async function deleteTeam(team) {
+        if (saving || !loaded) return;
+        if (!confirm('「' + team.name + '」を削除しますか？\n全員の一覧から消えます。' + (editing?.id === team.id && dirty ? '\n編集中の内容も破棄されます。' : ''))) return;
+        saving = true; fieldset.disabled = true; addButton.disabled = true;
+        document.querySelectorAll('.edit-team').forEach(button => { button.disabled = true; });
+        status.textContent = '削除しています…';
+        let deleted = false;
+        try {
+            const result = await store.remove(team.id, team.version);
+            if (result?.deleted !== true || result.id !== team.id) throw new Error('削除結果を確認できません。一覧を更新してください。');
+            deleted = true;
+            if (editing?.id === team.id) { dirty = false; editing = null; form.hidden = true; panel.hidden = true; }
+            records = records.filter(record => record.id !== team.id); draw();
+        } catch (error) { status.textContent = '削除できませんでした。' + error.message; }
+        finally {
+            saving = false; fieldset.disabled = false; addButton.disabled = !loaded;
+            document.querySelectorAll('.edit-team').forEach(button => { button.disabled = false; });
+        }
+        if (deleted) { await refresh(); status.textContent = '「' + team.name + '」を削除しました。'; }
+    }
     function draw() {
         ColorStore.categories.forEach(category => renderGroup(records.filter(r => r.category === category).map(r => ({ ...r, cardColor: r.card_color })), category + 'Grid'));
         colorSearch.dispatchEvent(new Event('input'));
@@ -132,6 +155,7 @@
         reading = true; refreshButton.disabled = true;
         try {
             const data = await store.list();
+            if (saving) return;
             // Validate the complete snapshot before replacing the last good view.
             data.forEach(ColorStore.validate);
             records = data; loaded = true; draw(); addButton.disabled = false;

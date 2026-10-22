@@ -61,6 +61,7 @@
             return response.json();
         }
         list() { return this.request('shared_colors?select=id,category,name,card_color,colors,version&order=created_at.asc,id.asc&limit=300'); }
+        remove(id, version) { return this.request('rpc/delete_shared_color', { p_id: id, p_version: version }); }
         save(team, id = null, version = null) {
             const value = validate(team);
             return this.request('rpc/save_shared_color', { p_id: id, p_version: version, p_category: value.category, p_name: value.name, p_card_color: value.card_color, p_colors: value.colors });
