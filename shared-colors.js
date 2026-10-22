@@ -30,9 +30,18 @@
         if (rows.children.length >= 12) return;
         const row = document.createElement('div'); row.className = 'editor-color';
         const values = [color.label || '', color.rgb ? getRgbText(color.rgb) : color.name || '', color.finish || ''];
-        ['項目名（メイン・パール等）', 'カラー名・RGB・HEX', '仕上げ（任意）'].forEach((labelText, i) => {
+        ['項目名（メイン・パール等）', 'カラー名・RGB・HEX', '塗装タイプ（任意）'].forEach((labelText, i) => {
             const label = document.createElement('label'); label.textContent = labelText;
-            const input = document.createElement('input'); input.type = 'text'; input.maxLength = [40, 160, 40][i];
+            const input = document.createElement(i === 2 ? 'select' : 'input');
+            if (i === 2) {
+                const finishes = ['', 'クラシック', 'メタリック', 'マット', '金属', 'カメレオン', 'RGBピッカー', 'HEXピッカー'];
+                // Keep previously entered custom values when editing existing teams.
+                if (values[i] && !finishes.includes(values[i])) finishes.push(values[i]);
+                finishes.forEach(value => {
+                    const option = document.createElement('option');
+                    option.value = value; option.textContent = value || '未指定'; input.append(option);
+                });
+            } else { input.type = 'text'; input.maxLength = [40, 160][i]; }
             input.required = i < 2; input.value = values[i]; input.dataset.field = ['label', 'value', 'finish'][i];
             label.append(input); row.append(label);
         });
