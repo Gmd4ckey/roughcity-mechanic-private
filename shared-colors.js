@@ -55,9 +55,22 @@
         }
         return card;
     };
+    function confirmDeletion(team) {
+        return new Promise(resolve => {
+            const dialog = document.createElement('dialog'); dialog.className = 'delete-dialog';
+            const title = document.createElement('h2'); title.id = 'deleteDialogTitle'; title.textContent = 'カラーを削除しますか？'; dialog.setAttribute('aria-labelledby', title.id);
+            const text = document.createElement('p'); text.textContent = '「' + team.name + '」が全員の一覧から消えます。' + (editing?.id === team.id && dirty ? '編集中の内容も破棄されます。' : '');
+            const cancel = document.createElement('button'); cancel.type = 'button'; cancel.textContent = 'キャンセル'; cancel.autofocus = true;
+            const confirm = document.createElement('button'); confirm.type = 'button'; confirm.textContent = '削除する'; confirm.className = 'delete-team';
+            cancel.addEventListener('click', () => dialog.close('cancel'));
+            confirm.addEventListener('click', () => dialog.close('delete'));
+            dialog.addEventListener('close', () => { const accepted = dialog.returnValue === 'delete'; dialog.remove(); resolve(accepted); }, {once:true});
+            dialog.append(title,text,cancel,confirm); document.body.append(dialog); dialog.showModal();
+        });
+    }
     async function deleteTeam(team) {
         if (saving || !loaded) return;
-        if (!confirm('「' + team.name + '」を削除しますか？\n全員の一覧から消えます。' + (editing?.id === team.id && dirty ? '\n編集中の内容も破棄されます。' : ''))) return;
+        if (!(await confirmDeletion(team))) return;
         saving = true; fieldset.disabled = true; addButton.disabled = true;
         document.querySelectorAll('.edit-team').forEach(button => { button.disabled = true; });
         status.textContent = '削除しています…';
