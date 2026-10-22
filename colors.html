@@ -478,7 +478,7 @@ main {
 
 }
 </style>
-<link rel="stylesheet" href="shared-colors.css">
+<link rel="stylesheet" href="shared-colors.css?v=20261022-palette">
 </head>
 
 
@@ -539,7 +539,13 @@ main {
    <div class="editor-fields">
     <label>分類<select id="teamCategory"><option value="gang">ギャング</option><option value="hangure">半グレ</option><option value="veteran">退役軍人</option><option value="doctor">個人医</option><option value="cartel">カルテル</option></select></label>
     <label>チーム名・名称<input id="teamName" required maxlength="80"></label>
-    <label>カード表示色（HEX）<input id="teamDisplayColor" required maxlength="7" pattern="#[0-9a-fA-F]{6}" placeholder="#8c299c"></label>
+    <div class="card-color-editor">
+     <span>カード表示色</span>
+     <div id="cardColorPalette" class="card-color-palette" role="group" aria-label="カード表示色のパレット"></div>
+     <label>自由に色を選ぶ<input id="cardColorPicker" type="color" value="#8c299c"></label>
+     <label>HEX<input id="teamDisplayColor" required maxlength="7" pattern="#[0-9a-fA-F]{6}" placeholder="#8c299c"></label>
+     <span>選択した色</span><div id="cardColorPreview" class="card-color-preview"></div>
+    </div>
    </div>
    <p>色名は自由に入力できます。RGBは「190, 72, 130」、HEXは「#BE4882」で入力すると色見本も表示します。各チーム12項目まで。</p>
    <div id="editorColors"></div>
@@ -1294,6 +1300,6 @@ updateThemeButton();
 
 <script src="colors-config.js"></script>
 <script src="color-store.js"></script>
-<script src="shared-colors.js"></script>
+<script src="shared-colors.js?v=20261022-palette"></script>
 </body>
 </html>

@@ -9,6 +9,33 @@
     const rows = byId('editorColors');
     const addButton = byId('addTeam');
     const refreshButton = byId('refreshColors');
+    const colorHex = byId('teamDisplayColor');
+    const colorPicker = byId('cardColorPicker');
+    const colorPalette = byId('cardColorPalette');
+    function syncCardColor(value) {
+        if (!/^#[0-9a-f]{6}$/i.test(value)) return;
+        colorHex.value = value; colorPicker.value = value;
+        byId('cardColorPreview').style.backgroundColor = value;
+        colorPalette.querySelectorAll('button').forEach(button => {
+            const selected = button.dataset.color.toLowerCase() === value.toLowerCase();
+            button.setAttribute('aria-pressed', String(selected)); button.textContent = selected ? '✓' : '';
+        });
+    }
+    if (colorPicker && colorPalette) {
+        const palette = ['#000000','#444444','#666666','#888888','#aaaaaa','#cccccc','#eeeeee','#ffffff',
+            '#f44336','#795000','#d88900','#81c700','#2986cc','#195577','#7030a0','#cc0088'];
+        const bases = [[220,40,40],[245,145,30],[230,190,30],[75,160,45],[35,120,135],[40,120,200],[110,70,160],[160,45,95]];
+        [0.75,0.5,0.25,0,-0.25,-0.5].forEach(tint => bases.forEach(rgb => {
+            palette.push('#' + rgb.map(v => Math.round(tint >= 0 ? v + (255-v)*tint : v*(1+tint)).toString(16).padStart(2,'0')).join(''));
+        }));
+        palette.forEach(value => {
+            const button = document.createElement('button'); button.type = 'button'; button.dataset.color = value;
+            button.style.backgroundColor = value; button.setAttribute('aria-label', 'カード色 ' + value);
+            button.title = value; button.addEventListener('click', () => syncCardColor(value)); colorPalette.append(button);
+        });
+        colorPicker.addEventListener('input', () => syncCardColor(colorPicker.value));
+        colorHex.addEventListener('input', () => syncCardColor(colorHex.value.trim()));
+    }
     let store, records = [], editing = null, loaded = false, reading = false, saving = false;
     const baseCard = createTeamCard;
     createTeamCard = function (team) {
@@ -55,6 +82,7 @@
         byId('teamCategory').value = team?.category || 'gang';
         byId('teamName').value = team?.name || '';
         byId('teamDisplayColor').value = team?.card_color || '#8c299c';
+        if (colorPicker) syncCardColor(byId('teamDisplayColor').value);
         rows.replaceChildren(); (team?.colors || [{ label: 'メイン' }]).forEach(addColorRow);
         editorStatus.textContent = ''; form.hidden = false;
         byId('teamName').focus(); form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

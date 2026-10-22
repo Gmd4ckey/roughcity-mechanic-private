@@ -8,6 +8,12 @@
 #colorEditor label { display: grid; gap: 6px; min-width: 0; }
 #colorEditor input, #colorEditor select { width: 100%; min-width: 0; background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 7px; padding: 10px; font: inherit; }
 .editor-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+.card-color-editor { display: grid; gap: 10px; grid-column: 1 / -1; max-width: 540px; width: 100%; }
+.card-color-palette { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px; max-width: 340px; }
+.shared-panel .card-color-palette button { padding: 0; width: 100%; aspect-ratio: 1; border-radius: 50%; border: 1px solid #888; color: white; text-shadow: 0 1px 3px black; min-height: 24px; }
+.card-color-palette button[aria-pressed="true"] { outline: 3px solid var(--text); outline-offset: 2px; }
+#colorEditor #cardColorPicker { height: 60px; padding: 4px; cursor: pointer; }
+.card-color-preview { height: 95px; border-radius: 12px; border: 1px solid var(--border); }
 .editor-color { display: grid; grid-template-columns: 1fr 2fr 1fr auto; gap: 10px; align-items: end; margin-bottom: 12px; }
 #colorEditor { border-top: 1px solid var(--border); margin-top: 16px; padding-top: 16px; }
 [hidden] { display: none !important; }
