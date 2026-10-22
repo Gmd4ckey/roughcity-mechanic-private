@@ -73,3 +73,41 @@ summary { cursor: pointer; font-weight: 700; font-size: 13px; }
 .page-note { font-size: 11px; line-height: 1.7; }
 @media(max-width: 850px) { main { padding: 12px; } .colors-workspace { grid-template-columns: 1fr; } .list-panel, #sharedPanel { padding: 16px; } }
 @media(max-width: 650px) { #editorColors, #colorEditor .editor-fields { grid-template-columns: 1fr; } }
+
+/* Compact cards: three columns on a half-width desktop window. */
+main { padding: 14px 12px; }
+header { min-height: 54px; padding: 8px 12px; gap: 12px; }
+.site-title { font-size: 19px; }
+.page-nav { gap: 5px; }
+.nav-button, #themeButton { padding: 7px 9px; font-size: 12px; }
+.list-panel { padding: 14px; border-radius: 12px; }
+.list-heading h2 { font-size: 17px; }
+#sharedStatus { margin: 8px 0; }
+.list-panel .shared-actions button, .category-filters button { padding: 6px 10px; }
+.list-panel .search-wrap { margin: 10px 0 8px; }
+#colorSearch { padding: 9px 12px; font-size: 13px; }
+.category-filters { margin-bottom: 12px; gap: 6px; }
+.list-panel .section-title { margin: 12px 0 9px; }
+.list-panel .team-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: start; }
+.list-panel .team-card { min-height: 0; min-width: 0; border-radius: 8px; }
+.list-panel .team-color-bar { height: 5px; }
+.list-panel .team-name { padding: 8px 10px; gap: 6px; font-size: 14px; }
+.list-panel .team-dot { width: 14px; height: 14px; flex-basis: 14px; }
+.list-panel .team-colors { padding: 2px 10px 4px; }
+.list-panel .color-item { padding: 6px 0; }
+.list-panel .color-label { font-size: 11px; margin-bottom: 3px; }
+.list-panel .color-name { display: inline; font-size: 12px; line-height: 1.5; }
+.list-panel .rgb-value, .list-panel .hex-value { font-size: 12px; overflow-wrap: anywhere; min-width: 0; }
+.list-panel .rgb-row { gap: 5px; flex-wrap: nowrap; }
+.list-panel .rgb-preview { width: 14px; height: 14px; flex-basis: 14px; }
+.list-panel .hex-row { margin-top: 3px; padding-left: 19px; gap: 5px; }
+.list-panel .copy-button { padding: 4px 5px; margin-top: 2px; font-size: 10px; white-space: nowrap; flex-shrink: 0; min-height: 24px; }
+.list-panel .edit-team { padding: 5px 9px; margin: 3px 4px 9px 10px; font-size: 12px; }
+.list-panel .delete-team { margin-left: 0; }
+@media (max-width: 740px) {
+  .list-panel .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  header { flex-wrap: wrap; }
+}
+@media (max-width: 440px) {
+  .list-panel .team-grid { grid-template-columns: 1fr; }
+}
