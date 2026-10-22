@@ -478,7 +478,7 @@ main {
 
 }
 </style>
-<link rel="stylesheet" href="shared-colors.css?v=20261022-palette">
+<link rel="stylesheet" href="shared-colors.css?v=20261023-layout">
 </head>
 
 
@@ -528,32 +528,7 @@ main {
 
 <main>
 
-<section class="shared-panel" id="sharedPanel" aria-labelledby="sharedTitle">
- <h2 id="sharedTitle">みんなで共有するカラー一覧</h2>
- <p>このページを開いた全員がカラーを追加・編集できます。保存した内容は、他の人の画面にも反映されます。</p>
- <p id="sharedStatus" role="status" aria-live="polite">共有保存先を確認しています…</p>
- <div class="shared-actions"><button type="button" id="addTeam" disabled>＋ カラーを追加</button><button type="button" id="refreshColors" disabled>一覧を更新</button></div>
- <form id="colorEditor" hidden>
-  <fieldset id="editorFieldset" style="border:0;padding:0;min-width:0">
-   <legend id="editorTitle">カラーを追加</legend>
-   <div class="editor-fields">
-    <label>分類<select id="teamCategory"><option value="gang">ギャング</option><option value="hangure">半グレ</option><option value="veteran">退役軍人</option><option value="doctor">個人医</option><option value="cartel">カルテル</option></select></label>
-    <label>チーム名・名称<input id="teamName" required maxlength="80"></label>
-    <div class="card-color-editor">
-     <span>カード表示色</span>
-     <div id="cardColorPalette" class="card-color-palette" role="group" aria-label="カード表示色のパレット"></div>
-     <label>自由に色を選ぶ<input id="cardColorPicker" type="color" value="#8c299c"></label>
-     <label>HEX<input id="teamDisplayColor" required maxlength="7" pattern="#[0-9a-fA-F]{6}" placeholder="#8c299c"></label>
-     <span>選択した色</span><div id="cardColorPreview" class="card-color-preview"></div>
-    </div>
-   </div>
-   <p>色名は自由に入力できます。RGBは「190, 72, 130」、HEXは「#BE4882」で入力すると色見本も表示します。各チーム12項目まで。</p>
-   <div id="editorColors"></div>
-   <div class="shared-actions"><button type="button" id="addColorRow">＋ 項目を追加</button><button type="submit">全員に共有して保存</button><button type="button" id="cancelColorEdit">キャンセル</button></div>
-  </fieldset>
-  <p id="editorStatus" role="status" aria-live="polite"></p>
- </form>
-</section>
+<div class="colors-workspace"><section class="list-panel"><div class="list-heading"><h2><span class="step-number">01</span> 登録カラー一覧</h2><span id="colorCount">0件</span></div><p id="sharedStatus" role="status" aria-live="polite">共有保存先を確認しています…</p><div class="shared-actions"><button type="button" id="addTeam" disabled>＋ 新規登録</button><button type="button" id="refreshColors" disabled>一覧を更新</button></div>
 
 
     <!-- 検索 -->
@@ -563,12 +538,13 @@ main {
         <input
             type="text"
             id="colorSearch"
-            placeholder="🔍 チーム名・色名・RGB・HEXで検索..."
+            aria-label="登録カラーを検索" placeholder="カラー名・チーム名・RGB・HEXで検索"
         >
 
     </div>
 
 
+    <div id="categoryFilters" class="category-filters" aria-label="分類で絞り込み"><button type="button" data-category="all" aria-pressed="true">すべて</button><button type="button" data-category="gang" aria-pressed="false">ギャング</button><button type="button" data-category="hangure" aria-pressed="false">半グレ</button><button type="button" data-category="other" aria-pressed="false">その他</button></div>
     <!-- ==============================
          ギャング
     ============================== -->
@@ -665,6 +641,29 @@ main {
         ※ カードの色は識別用です。ゲーム内の実際の車両カラーとは多少異なる場合があります。
     </div>
 
+<p class="sharing-note">保存したカラーは全員が閲覧・編集できます。更新は15秒ごとに反映されます。</p></section><section class="shared-panel" id="sharedPanel" aria-labelledby="sharedTitle">
+ <h2 id="sharedTitle"><span class="step-number">02</span> カラーを新規登録</h2>
+ <p class="help-text">メイン・サブなど、必要なカラーをまとめて登録できます。</p>
+ <form id="colorEditor" hidden>
+  <fieldset id="editorFieldset" style="border:0;padding:0;min-width:0">
+   <legend id="editorTitle">カラーを追加</legend>
+   <div class="editor-fields">
+    <label>分類<select id="teamCategory"><option value="gang">ギャング</option><option value="hangure">半グレ</option><option value="veteran">退役軍人</option><option value="doctor">個人医</option><option value="cartel">カルテル</option></select></label>
+    <label>カラー名・チーム名 <span class="required-hint">必須</span><input placeholder="例：LAZOS" id="teamName" required maxlength="80"></label>
+    <details class="card-color-editor"><summary>カード表示色を選ぶ</summary>
+     <div id="cardColorPalette" class="card-color-palette" role="group" aria-label="カード表示色のパレット"></div>
+     <label>自由に色を選ぶ<input id="cardColorPicker" type="color" value="#8c299c"></label>
+     <label>HEX<input id="teamDisplayColor" required maxlength="7" pattern="#[0-9a-fA-F]{6}" placeholder="#8c299c"></label>
+     <span>選択した色</span><div id="cardColorPreview" class="card-color-preview"></div>
+    </details>
+   </div>
+   <p class="help-text">色名・RGB・HEXを自由に入力できます。必要な項目だけチェックを付けてください。各チーム12項目まで。</p>
+   <div id="editorColors"></div>
+   <div class="shared-actions"><button type="button" id="addColorRow">＋ 項目を追加</button><button type="submit">登録して全員に共有</button><button type="button" id="cancelColorEdit">入力をリセット</button></div>
+  </fieldset>
+  <p id="editorStatus" role="status" aria-live="polite"></p>
+ </form>
+</section></div>
 </main>
 
 
@@ -1300,6 +1299,6 @@ updateThemeButton();
 
 <script src="colors-config.js"></script>
 <script src="color-store.js"></script>
-<script src="shared-colors.js?v=20261022-palette"></script>
+<script src="shared-colors.js?v=20261023-layout"></script>
 </body>
 </html>

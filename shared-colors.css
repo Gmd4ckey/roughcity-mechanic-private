@@ -22,3 +22,45 @@
 button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #a541b5; outline-offset: 2px; }
 .page-nav { display: flex; flex-wrap: wrap; gap: 8px; }
 @media(max-width: 700px) { .editor-fields, .editor-color { grid-template-columns: 1fr; } }
+
+/* Registration workspace: list first, focused form alongside. */
+body.dark { --bg: #10151e; --panel: #1c2532; --panel2: #253143; --border: #364459; --button: #202c3c; --sub: #aebed4; }
+main { max-width: 1440px; margin: 0 auto; padding: 24px; }
+.colors-workspace { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(340px, 1fr); gap: 20px; align-items: start; }
+.list-panel, #sharedPanel { padding: 22px; background: var(--panel); border: 1px solid var(--border); border-radius: 18px; min-width: 0; }
+.list-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.list-heading h2, #sharedTitle { font-size: 19px; margin: 0; }
+.step-number { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: #777eff25; color: #9197ff; font-size: 12px; margin-right: 6px; }
+#colorCount { color: #9197ff; white-space: nowrap; font-size: 13px; }
+#sharedStatus { font-size: 12px; color: var(--sub); margin: 16px 0; }
+.list-panel .shared-actions button, .category-filters button { border: 1px solid var(--border); border-radius: 9px; background: var(--button); color: var(--text); padding: 9px 13px; cursor: pointer; }
+.list-panel .search-wrap { margin: 18px 0 10px; }
+.category-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+.category-filters button[aria-pressed="true"], #colorEditor button[type="submit"] { background: #777ef2; border-color: #777ef2; color: white; font-weight: 700; }
+.list-panel .team-grid { grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 14px; }
+.list-panel .color-section { margin-bottom: 22px; }
+.list-panel .section-title { font-size: 15px; margin: 18px 0 12px; }
+.list-panel .empty-message { padding: 85px 24px; border: 1px dashed var(--border); background: var(--panel2); border-radius: 12px; font-size: 14px; line-height: 1.9; text-align: center; }
+.sharing-note { padding-top: 18px; border-top: 1px solid var(--border); font-size: 12px; line-height: 1.8; color: var(--sub); }
+.help-text { font-size: 12px; color: var(--sub); line-height: 1.8; }
+#colorEditor { margin-top: 18px; padding-top: 0; border-top: 0; }
+#editorTitle { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+#colorEditor .editor-fields { display: grid; grid-template-columns: 1fr; gap: 18px; }
+#colorEditor label { font-size: 13px; font-weight: 600; }
+.required-hint { font-size: 11px; color: #9197ff; }
+#colorEditor input, #colorEditor select { font-size: 14px; min-height: 42px; }
+#colorEditor details.card-color-editor { display: block; border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+details.card-color-editor > :not(summary) { margin-top: 12px; }
+summary { cursor: pointer; font-weight: 700; font-size: 13px; }
+.card-color-preview { height: 55px; }
+#editorColors { border: 1px solid var(--border); border-radius: 12px; padding: 10px; background: var(--panel2); margin: 18px 0; }
+#colorEditor .editor-color { display: block; padding: 14px; border: 1px solid var(--border); border-radius: 9px; background: var(--panel); margin-bottom: 8px; }
+.editor-color:last-child { margin-bottom: 0; }
+.editor-color > label, .editor-color > button { margin-top: 14px; }
+#colorEditor .enable-color { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+#colorEditor .enable-color input { width: 16px; min-height: 16px; accent-color: #858bff; }
+.editor-color summary.inactive { color: var(--sub); }
+.editor-color input:disabled, .editor-color select:disabled { opacity: .45; }
+.copy-button { cursor: pointer; margin-top: 6px; }
+.page-note { font-size: 11px; line-height: 1.7; }
+@media(max-width: 850px) { main { padding: 12px; } .colors-workspace { grid-template-columns: 1fr; } .list-panel, #sharedPanel { padding: 16px; } }
