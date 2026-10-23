@@ -87,3 +87,17 @@
 .mechanic-page .summary-table td:first-child { white-space: nowrap; }
 @media (min-width: 1400px) { .mechanic-page main { max-width: 1400px; } }
 @media (max-width: 1100px) { .mechanic-page .order-results { grid-template-columns: minmax(0, 1fr); } }
+
+/* Repairs precede the order sheet, in reading order across two columns. */
+.mechanic-page .repair-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
+.mechanic-page .repair-item { padding: 12px 16px; min-width: 0; }
+.mechanic-page .repair-item:nth-child(odd) { border-right: 1px solid var(--border); padding-left: 0; }
+.mechanic-page .repair-item:nth-child(even) { padding-right: 0; }
+.mechanic-page .repair-item:nth-last-child(-n+2) { border-bottom: 0; padding-bottom: 0; }
+.mechanic-page .service-layout { grid-template-columns: minmax(0, 1fr); }
+.mechanic-page .sales-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
+@media (max-width: 600px) {
+  .mechanic-page .repair-item { gap: 6px; padding: 10px 8px; }
+  .mechanic-page .repair-quantity { width: 48px; flex-basis: 48px; }
+  .mechanic-page .sales-grid { grid-template-columns: 1fr; }
+}
