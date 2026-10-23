@@ -73,3 +73,17 @@
 .mechanic-page .detail-table th:nth-child(2), .mechanic-page .detail-table td:nth-child(2) { width: auto; white-space: nowrap; }
 .mechanic-page .detail-table td:nth-child(3) { width: auto; min-width: 100px; overflow-wrap: anywhere; }
 @media (max-width: 1100px) { .mechanic-page .order-results { grid-template-columns: 1fr; } }
+
+/* Keep the page stack independent of the legacy wide-screen grid placement. */
+.mechanic-page main { display: flex; flex-direction: column; }
+.mechanic-page main > * { min-width: 0; width: 100%; }
+.mechanic-page .custom-section, .mechanic-page .performance-section { grid-column: auto; grid-row: auto; }
+.mechanic-page .order-results { grid-template-columns: minmax(240px, .8fr) minmax(0, 1.6fr); }
+.mechanic-page .summary-table { display: table; width: 100%; }
+.mechanic-page .summary-table thead { display: table-header-group; }
+.mechanic-page .summary-table tbody { display: table-row-group; }
+.mechanic-page .summary-table tr { display: table-row; background: transparent; border: 0; }
+.mechanic-page .summary-table td { display: table-cell; padding: 9px 8px; border-bottom: 1px solid var(--border); }
+.mechanic-page .summary-table td:first-child { white-space: nowrap; }
+@media (min-width: 1400px) { .mechanic-page main { max-width: 1400px; } }
+@media (max-width: 1100px) { .mechanic-page .order-results { grid-template-columns: minmax(0, 1fr); } }
