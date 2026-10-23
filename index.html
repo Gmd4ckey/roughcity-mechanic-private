@@ -8,9 +8,10 @@
     <title>ラフシティメカニック</title>
 
     <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="mechanic-layout.css?v=20261023-1">
 </head>
 
-<body>
+<body class="mechanic-page">
 
 <header>
 
@@ -47,10 +48,7 @@
 
 
 <main>
-
-    <!-- 請求合計 -->
-
-    <section class="top-bar">
+<section class="top-bar">
 
         <div class="total-area">
 
@@ -85,15 +83,48 @@
         </div>
 
     </section>
+<section class="order-input-section">
 
+        <h2>オーダーシート</h2><p class="section-help">注文を貼り付けて解析すると、外装・カラーの件数に反映されます。</p>
 
-<!-- =========================
-     修理
-========================= -->
+        <textarea
+            id="orderInput"
+            placeholder="ここにオーダーシートを貼り付け"
+        ></textarea>
 
-<section class="repair-section">
+        <button id="analyzeButton">
+            オーダーを解析
+        </button>
 
-    <h2>修理</h2>
+    </section>
+<div class="order-results"><section class="summary-section">
+
+            <h2>注文の集計</h2>
+
+            <div id="orderSummary">
+
+                <p class="empty-message">
+                    オーダーを解析すると、ここに集計結果が表示されます
+                </p>
+
+            </div>
+
+        </section><section class="detail-section">
+
+            <h2>注文の明細</h2>
+
+            <div id="orderResult">
+
+                <p class="empty-message">
+                    オーダー内容がここに一覧表示されます
+                </p>
+
+            </div>
+
+        </section></div>
+<div class="service-layout"><section class="repair-section">
+
+    <h2>修理・補充</h2>
 
     <div class="repair-grid">
 
@@ -111,7 +142,7 @@
                 min="0"
                 step="1"
                 value="0"
-            >
+             aria-label="数量">
 
         </div>
 
@@ -130,7 +161,7 @@
                 min="0"
                 step="1"
                 value="0"
-            >
+             aria-label="数量">
 
         </div>
 
@@ -149,7 +180,7 @@
                 min="0"
                 step="1"
                 value="0"
-            >
+             aria-label="数量">
 
         </div>
 
@@ -168,7 +199,7 @@
                 min="0"
                 step="1"
                 value="0"
-            >
+             aria-label="数量">
 
         </div>
 
@@ -186,76 +217,226 @@
         min="0"
         step="1"
         value="0"
-    >
+     aria-label="数量">
 
 </div>
 
     </div>
 
-</section>
+</section><section class="sales-section">
 
-    <!-- オーダーシート -->
-
-    <section class="order-input-section">
-
-        <h2>オーダーシート</h2>
-
-        <textarea
-            id="orderInput"
-            placeholder="ここにオーダーシートを貼り付け"
-        ></textarea>
-
-        <button id="analyzeButton">
-            オーダーを解析
-        </button>
-
-    </section>
+        <h2>販売</h2>
 
 
-    <!-- メイン -->
-
-    <div class="dashboard-layout">
+        <div class="sales-grid">
 
 
-        <!-- SUMMARY -->
+            <div class="sales-item">
 
-        <section class="summary-section">
+                <div class="sales-info">
 
-            <h2>SUMMARY</h2>
+                    <strong>
+                        クリーニングキット
+                    </strong>
 
-            <div id="orderSummary">
+                    <span>
+                        ¥100,000
+                    </span>
 
-                <p class="empty-message">
-                    オーダーを解析すると、ここに集計結果が表示されます
-                </p>
+                </div>
+
+                <input
+                    type="number"
+                    class="sale-quantity"
+                    data-price="100000"
+                    min="0"
+                    step="1"
+                    value="0"
+                 aria-label="数量">
+
+            </div>
+
+
+            <div class="sales-item">
+
+                <div class="sales-info">
+
+                    <strong>
+                        ネオンコントローラー
+                    </strong>
+
+                    <span>
+                        ¥200,000
+                    </span>
+
+                </div>
+
+                <input
+                    type="number"
+                    class="sale-quantity"
+                    data-price="200000"
+                    min="0"
+                    step="1"
+                    value="0"
+                 aria-label="数量">
+
+            </div>
+
+
+            <div class="sales-item">
+
+                <div class="sales-info">
+
+                    <strong>
+                        ダクトテープ
+                    </strong>
+
+                    <span>
+                        ¥200,000
+                    </span>
+
+                </div>
+
+                <input
+                    type="number"
+                    class="sale-quantity"
+                    data-price="200000"
+                    min="0"
+                    step="1"
+                    value="0"
+                 aria-label="数量">
+
+            </div>
+
+
+            <div class="sales-item">
+
+                <div class="sales-info">
+
+                    <strong>
+                        車両塗装缶
+                    </strong>
+
+                    <span>
+                        ¥150,000
+                    </span>
+
+                </div>
+
+                <input
+                    type="number"
+                    class="sale-quantity"
+                    data-price="150000"
+                    min="0"
+                    step="1"
+                    value="0"
+                 aria-label="数量">
+
+            </div>
+
+
+            <div class="sales-item">
+
+                <div class="sales-info">
+
+                    <strong>
+                        ニトロ缶
+                    </strong>
+
+                    <span>
+                        ¥2,500,000
+                    </span>
+
+                </div>
+
+                <input
+                    type="number"
+                    class="sale-quantity"
+                    data-price="2500000"
+                    min="0"
+                    step="1"
+                    value="0"
+                 aria-label="数量">
+
+            </div>
+
+
+            <div class="sales-item">
+
+                <div class="sales-info">
+
+                    <strong>
+                        ニトロ補充
+                    </strong>
+
+                    <span>
+                        ¥1,200,000
+                    </span>
+
+                </div>
+
+                <input
+                    type="number"
+                    class="sale-quantity"
+                    data-price="1200000"
+                    min="0"
+                    step="1"
+                    value="0"
+                 aria-label="数量">
+
+            </div>
+
+        </div>
+
+    </section></div>
+<section class="custom-section">
+
+            <h2>外装・カラー</h2>
+
+
+            <div class="custom-count-row">
+
+                <div>
+
+                    <strong>
+                        外装カスタム
+                    </strong>
+
+                    <p>
+                        1か所 ¥100,000
+                    </p>
+
+                </div>
+
+
+                <select id="exteriorCount"></select>
+
+            </div>
+
+
+            <div class="custom-count-row">
+
+                <div>
+
+                    <strong>
+                        カラー
+                    </strong>
+
+                    <p>
+                        1か所 ¥50,000
+                    </p>
+
+                </div>
+
+
+                <select id="colorCount"></select>
 
             </div>
 
         </section>
+<details class="mechanic-fold performance-section">
 
-
-        <!-- DETAIL LIST -->
-
-        <section class="detail-section">
-
-            <h2>DETAIL LIST</h2>
-
-            <div id="orderResult">
-
-                <p class="empty-message">
-                    オーダー内容がここに一覧表示されます
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- 性能カスタム -->
-
-        <section class="performance-section">
-
-            <h2>性能カスタム</h2>
+            <summary><span>性能カスタム</span><small>レベル・追加パーツを選ぶ</small></summary><div class="fold-content">
 
             <div class="performance-grid">
 
@@ -565,231 +746,7 @@
 
             </div>
 
-        </section>
-
-
-        <!-- 外装・カラー -->
-
-        <section class="custom-section">
-
-            <h2>外装カスタム</h2>
-
-
-            <div class="custom-count-row">
-
-                <div>
-
-                    <strong>
-                        外装カスタム
-                    </strong>
-
-                    <p>
-                        1か所 ¥100,000
-                    </p>
-
-                </div>
-
-
-                <select id="exteriorCount"></select>
-
-            </div>
-
-
-            <div class="custom-count-row">
-
-                <div>
-
-                    <strong>
-                        カラー
-                    </strong>
-
-                    <p>
-                        1か所 ¥50,000
-                    </p>
-
-                </div>
-
-
-                <select id="colorCount"></select>
-
-            </div>
-
-        </section>
-
-    </div>
-
-
-    <!-- =====================================
-         販売
-    ====================================== -->
-
-    <section class="sales-section">
-
-        <h2>販売</h2>
-
-
-        <div class="sales-grid">
-
-
-            <div class="sales-item">
-
-                <div class="sales-info">
-
-                    <strong>
-                        クリーニングキット
-                    </strong>
-
-                    <span>
-                        ¥100,000
-                    </span>
-
-                </div>
-
-                <input
-                    type="number"
-                    class="sale-quantity"
-                    data-price="100000"
-                    min="0"
-                    step="1"
-                    value="0"
-                >
-
-            </div>
-
-
-            <div class="sales-item">
-
-                <div class="sales-info">
-
-                    <strong>
-                        ネオンコントローラー
-                    </strong>
-
-                    <span>
-                        ¥200,000
-                    </span>
-
-                </div>
-
-                <input
-                    type="number"
-                    class="sale-quantity"
-                    data-price="200000"
-                    min="0"
-                    step="1"
-                    value="0"
-                >
-
-            </div>
-
-
-            <div class="sales-item">
-
-                <div class="sales-info">
-
-                    <strong>
-                        ダクトテープ
-                    </strong>
-
-                    <span>
-                        ¥200,000
-                    </span>
-
-                </div>
-
-                <input
-                    type="number"
-                    class="sale-quantity"
-                    data-price="200000"
-                    min="0"
-                    step="1"
-                    value="0"
-                >
-
-            </div>
-
-
-            <div class="sales-item">
-
-                <div class="sales-info">
-
-                    <strong>
-                        車両塗装缶
-                    </strong>
-
-                    <span>
-                        ¥150,000
-                    </span>
-
-                </div>
-
-                <input
-                    type="number"
-                    class="sale-quantity"
-                    data-price="150000"
-                    min="0"
-                    step="1"
-                    value="0"
-                >
-
-            </div>
-
-
-            <div class="sales-item">
-
-                <div class="sales-info">
-
-                    <strong>
-                        ニトロ缶
-                    </strong>
-
-                    <span>
-                        ¥2,500,000
-                    </span>
-
-                </div>
-
-                <input
-                    type="number"
-                    class="sale-quantity"
-                    data-price="2500000"
-                    min="0"
-                    step="1"
-                    value="0"
-                >
-
-            </div>
-
-
-            <div class="sales-item">
-
-                <div class="sales-info">
-
-                    <strong>
-                        ニトロ補充
-                    </strong>
-
-                    <span>
-                        ¥1,200,000
-                    </span>
-
-                </div>
-
-                <input
-                    type="number"
-                    class="sale-quantity"
-                    data-price="1200000"
-                    min="0"
-                    step="1"
-                    value="0"
-                >
-
-            </div>
-
-        </div>
-
-    </section>
-
+        </div></details>
 </main>
 
 

@@ -1,0 +1,53 @@
+/* This stylesheet is loaded only by the mechanic page. */
+.mechanic-page header { height: auto; min-height: 58px; padding: 10px 18px; gap: 12px; flex-wrap: wrap; }
+.mechanic-page header h1 { width: auto; font-size: 19px; }
+.mechanic-page .header-buttons { display: flex; flex-wrap: wrap; width: auto; gap: 8px; }
+.mechanic-page .page-nav { flex-wrap: wrap; gap: 6px; }
+.mechanic-page .header-buttons .page-nav a, .mechanic-page #themeButton { padding: 7px 10px; font-size: 12px; }
+.mechanic-page main { width: calc(100% - 28px); max-width: 1180px; margin: 16px auto 36px; gap: 16px; }
+.mechanic-page section, .mechanic-fold { min-width: 0; border-radius: 12px; padding: 18px; }
+.mechanic-page h2 { font-size: 16px; margin-bottom: 12px; }
+.mechanic-page .top-bar { position: sticky; top: 8px; z-index: 20; gap: 12px; flex-wrap: wrap; box-shadow: 0 3px 14px #00000015; padding: 12px 18px; }
+.mechanic-page .total-area { gap: 14px; }
+.mechanic-page .total-title { font-size: 13px; color: var(--subtext); }
+.mechanic-page #totalPrice { font-size: 28px; font-variant-numeric: tabular-nums; }
+.mechanic-page button { border: 1px solid var(--border); background: var(--input-bg); color: var(--text); }
+.mechanic-page #completePaymentButton, .mechanic-page #analyzeButton { background: #8c299c; border-color: #8c299c; color: white; }
+.mechanic-page #resetButton { color: var(--subtext); }
+.section-help { margin: -4px 0 12px; font-size: 12px; color: var(--subtext); line-height: 1.6; }
+.mechanic-page textarea { min-height: 86px; line-height: 1.6; }
+.service-layout, .order-results { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.order-results:has(#orderSummary > .empty-message):has(#orderResult > .empty-message) { display: none; }
+.mechanic-page .summary-section, .mechanic-page .detail-section { grid-column: auto; grid-row: auto; overflow-x: auto; }
+.mechanic-page .repair-grid, .mechanic-page .sales-grid { grid-template-columns: 1fr; gap: 0; }
+.mechanic-page .repair-item, .mechanic-page .sales-item { border: 0; border-bottom: 1px solid var(--border); border-radius: 0; background: transparent; padding: 10px 0; gap: 10px; }
+.mechanic-page .repair-item:last-child, .mechanic-page .sales-item:last-child { border-bottom: 0; padding-bottom: 0; }
+.mechanic-page .repair-info strong, .mechanic-page .sales-info strong { font-size: 13px; }
+.mechanic-page .repair-quantity, .mechanic-page .sale-quantity { width: 64px; flex: 0 0 64px; padding: 7px; font-size: 14px; }
+.mechanic-page .custom-section { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+.mechanic-page .custom-section h2 { grid-column: 1 / -1; }
+.mechanic-page .custom-count-row { border: 0; padding: 4px 0; gap: 12px; font-size: 13px; }
+.mechanic-page select { min-width: 80px; }
+.mechanic-fold { background: var(--card); border: 1px solid var(--border); }
+.mechanic-fold summary { cursor: pointer; font-size: 16px; font-weight: 700; }
+.mechanic-fold summary small { margin-left: 12px; color: var(--subtext); font-size: 12px; font-weight: 400; }
+.mechanic-fold:has(input:checked) summary::after { content: '選択あり'; display: inline-block; margin-left: 10px; padding: 3px 8px; border-radius: 5px; background: #8c299c; color: white; font-size: 11px; }
+.fold-content { margin-top: 18px; }
+.mechanic-page .performance-grid { grid-template-columns: 1fr; gap: 8px; }
+.mechanic-page .performance-row { grid-template-columns: minmax(130px, 1.5fr) repeat(5, minmax(0, 1fr)); gap: 4px; padding: 8px; }
+.mechanic-page .performance-row label { min-width: 0; padding: 6px 3px; }
+.mechanic-page .extra-parts { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
+.mechanic-page button:focus-visible, .mechanic-page input:focus-visible, .mechanic-page select:focus-visible, .mechanic-page summary:focus-visible { outline: 2px solid #a541b5; outline-offset: 3px; }
+@media (max-width: 900px) { .mechanic-page header { flex-direction: row; align-items: center; } }
+@media (max-width: 600px) {
+  .mechanic-page main { width: calc(100% - 20px); gap: 12px; }
+  .service-layout, .order-results { grid-template-columns: 1fr; gap: 12px; }
+  .mechanic-page .custom-section { grid-template-columns: 1fr; gap: 10px; }
+  .mechanic-page .top-bar { top: 0; padding: 10px 12px; }
+  .mechanic-page .top-buttons { flex-wrap: wrap; }
+  .mechanic-page .top-buttons button { padding: 8px 10px; }
+  .mechanic-page .performance-row { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .mechanic-page .part-name { grid-column: 1 / -1; margin-bottom: 4px; }
+  .mechanic-page .extra-parts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mechanic-fold summary small { display: block; margin: 6px 0 0 18px; }
+}
