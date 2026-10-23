@@ -56,3 +56,13 @@
   .mechanic-page .extra-parts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mechanic-fold summary small { display: block; margin: 6px 0 0 18px; }
 }
+
+/* Package details float above the page without resizing the service row. */
+.mechanic-page button.full-custom-summary { display: inline; padding: 0; margin: 0; border: 0; border-radius: 0; background: transparent; color: var(--subtext); font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+#fullCustomInfo { width: min(380px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); overflow: auto; padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); color: var(--text); box-shadow: 0 12px 50px #0005; font-size: 14px; }
+#fullCustomInfo::backdrop { background: #0005; }
+.full-custom-info-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+#fullCustomInfo h2 { margin: 0; font-size: 16px; }
+#fullCustomInfo h3 { font-size: 13px; color: var(--subtext); margin: 18px 0 6px; }
+#fullCustomInfo p { margin: 12px 0 0; line-height: 1.6; }
+#fullCustomInfo ul { padding-left: 20px; margin: 6px 0 0; line-height: 1.8; }

@@ -8,7 +8,7 @@
     <title>ラフシティメカニック</title>
 
     <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mechanic-layout.css?v=20261023-2">
+<link rel="stylesheet" href="mechanic-layout.css?v=20261023-3">
 <link rel="stylesheet" href="theme-ui.css?v=20261023-1">
 </head>
 
@@ -226,7 +226,7 @@
   <div class="repair-info">
     <strong>フルカスタム</strong>
     <span>¥29,650,000</span>
-    <span>エンジンLv4・ブレーキLv3・トランスミッションLv3</span>
+    <span><button type="button" class="full-custom-summary" popovertarget="fullCustomInfo">構成・レベルを見る ⓘ</button></span>
   </div>
   <input type="number" class="repair-quantity" data-price="29650000" min="0" step="1" value="0" aria-label="フルカスタムの数量">
 </div>
@@ -680,6 +680,9 @@
 <script src="script.js"></script>
 
 <script src="theme-ui.js?v=20261023-1"></script>
+<div id="fullCustomInfo" popover aria-labelledby="fullCustomInfoTitle">
+<div class="full-custom-info-heading"><h2 id="fullCustomInfoTitle">フルカスタムの概要</h2><button type="button" popovertarget="fullCustomInfo" popovertargetaction="hide" aria-label="概要を閉じる">×</button></div>
+<p>エンジン <strong>Lv4</strong></p><h3>各Lv3</h3><ul><li>ブレーキ</li><li>トランスミッション</li><li>オイルポンプ</li><li>ドライブシャフト</li><li>シリンダーヘッド</li><li>バッテリーケーブル</li><li>燃料タンク</li></ul><h3>追加パーツ</h3><p>アーマー・ターボ・ニトロ</p></div>
 </body>
 
 </html>
