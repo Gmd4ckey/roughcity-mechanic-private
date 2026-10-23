@@ -37,6 +37,11 @@
 .mechanic-page .performance-row { grid-template-columns: minmax(130px, 1.5fr) repeat(5, minmax(0, 1fr)); gap: 4px; padding: 8px; }
 .mechanic-page .performance-row label { min-width: 0; padding: 6px 3px; }
 .mechanic-page .extra-parts { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
+.mechanic-page .performance-row label { display: grid; grid-template-columns: auto auto; justify-content: center; gap: 4px; }
+.mechanic-page .option-price { grid-column: 1 / -1; font-size: 11px; font-weight: 400; white-space: nowrap; text-align: center; color: var(--subtext); font-variant-numeric: tabular-nums; }
+.mechanic-page label:has(input:checked) .option-price { color: inherit; }
+.mechanic-page .extra-parts label { display: grid; grid-template-columns: auto auto; justify-content: center; gap: 4px; padding: 9px 6px; }
+@media (max-width: 600px) { .mechanic-page .option-price { font-size: 10px; } }
 .mechanic-page button:focus-visible, .mechanic-page input:focus-visible, .mechanic-page select:focus-visible, .mechanic-page summary:focus-visible { outline: 2px solid #a541b5; outline-offset: 3px; }
 @media (max-width: 900px) { .mechanic-page header { flex-direction: row; align-items: center; } }
 @media (max-width: 600px) {
