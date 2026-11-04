@@ -391,7 +391,7 @@ repairQuantities.forEach((input) => {
     total +=
         Number(
             exteriorCount.value
-        ) * 100000;
+        ) * 800000;
 
 
     // カラー
@@ -400,7 +400,7 @@ repairQuantities.forEach((input) => {
     total +=
         Number(
             colorCount.value
-        ) * 50000;
+        ) * 200000;
 
 
     // 販売
