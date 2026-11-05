@@ -346,89 +346,102 @@ const nameOrder = {
 // 合計金額
 // ==========================================
 
-function calculateTotal() {
-
-    let total = 0;
-
-// --------------------------------------
-// 修理
-// --------------------------------------
-
-repairQuantities.forEach((input) => {
-
-    const quantity =
-        Math.max(
-            0,
-            Number(input.value) || 0
-        );
-
-    const price =
-        Number(
-            input.dataset.price
-        );
-
-    total +=
-        quantity * price;
-
-});
-    // 性能カスタム
-
-    priceItems.forEach((item) => {
-
-        if (item.checked) {
-
-            total +=
-                Number(
-                    item.dataset.price
-                );
-        }
+// One set of line items drives both the total and the breakdown.
+function getBillingLines() {
+    const lines = [];
+    const add = (name, quantity, price, group, key) => {
+        if (quantity > 0) lines.push({name, quantity, price, group, key, subtotal: quantity * price});
+    };
+    repairQuantities.forEach(input => add(
+        input.closest('.repair-item').querySelector('strong').textContent.trim(),
+        Math.max(0, Number(input.value) || 0), Number(input.dataset.price), '修理・補充', 'repair'));
+    priceItems.forEach(item => {
+        if (!item.checked) return;
+        const option = item.closest('label').querySelector('.option-name').textContent.trim();
+        const part = item.closest('.performance-row')?.querySelector('.part-name').textContent.trim();
+        add(part ? part + ' ' + option : option, 1, Number(item.dataset.price), '性能カスタム', item.name || option);
     });
-
-
-    // 外装
-    // 1か所 ¥100,000
-
-    total +=
-        Number(
-            exteriorCount.value
-        ) * 800000;
-
-
-    // カラー
-    // 1か所 ¥50,000
-
-    total +=
-        Number(
-            colorCount.value
-        ) * 200000;
-
-
-    // 販売
-
-    saleQuantities.forEach((input) => {
-
-        const quantity =
-            Math.max(
-                0,
-                Number(input.value) || 0
-            );
-
-        const price =
-            Number(
-                input.dataset.price
-            );
-
-        total +=
-            quantity * price;
-    });
-
-
-    // 表示
-
-    totalPrice.textContent =
-        "¥" +
-        total.toLocaleString("ja-JP");
+    add('外装カスタム', Number(exteriorCount.value), 800000, '外装・カラー', 'exterior');
+    add('カラー', Number(colorCount.value), 200000, '外装・カラー', 'color');
+    saleQuantities.forEach(input => add(
+        input.closest('.sales-item').querySelector('strong').textContent.trim(),
+        Math.max(0, Number(input.value) || 0), Number(input.dataset.price), '販売', 'sale'));
+    return lines;
 }
+
+function yen(value) { return '¥' + value.toLocaleString('ja-JP'); }
+
+function renderBillingBreakdown(lines, total) {
+    const content = document.getElementById('breakdownContent');
+    content.replaceChildren();
+    if (!lines.length) {
+        const empty = document.createElement('p');
+        empty.className = 'empty-message';
+        empty.textContent = '項目を選ぶと、ここに料金内訳が表示されます。';
+        content.append(empty);
+    } else {
+        const table = document.createElement('table');
+        table.className = 'billing-table';
+        const head = table.createTHead().insertRow();
+        ['項目', '数量', '単価', '小計'].forEach(text => {
+            const th = document.createElement('th'); th.scope = 'col'; th.textContent = text; head.append(th);
+        });
+        const body = table.createTBody();
+        lines.forEach(line => {
+            const row = body.insertRow();
+            const name = row.insertCell();
+            const group = document.createElement('small'); group.textContent = line.group;
+            const label = document.createElement('span'); label.textContent = line.name;
+            name.append(group, label);
+            [line.quantity, yen(line.price), yen(line.subtotal)].forEach(text => { row.insertCell().textContent = text; });
+        });
+        content.append(table);
+    }
+    document.getElementById('breakdownTotal').textContent = yen(total);
+}
+
+function getDuplicateWarnings(lines, items) {
+    const warnings = [];
+    const full = lines.find(line => line.name === 'フルカスタム');
+    if (full) {
+        const included = ['engine', 'transmission', 'brake', 'oilpump', 'driveshaft', 'cylinder', 'battery', 'fuel', 'アーマー', 'ターボ', 'ニトロ新規'];
+        const overlaps = lines.filter(line => line.group === '性能カスタム' && included.includes(line.key));
+        if (overlaps.length) warnings.push('フルカスタムに含まれる項目も個別に選択されています：' + overlaps.map(line => line.name).join('、'));
+        if (full.quantity > 1) warnings.push('フルカスタムの数量が ' + full.quantity + ' です。台数をご確認ください。');
+    }
+    if (lines.filter(line => line.name === 'ニトロ補充').length > 1) warnings.push('ニトロ補充が「修理・補充」と「販売」の両方で入力されています。');
+    const counts = new Map();
+    items.forEach(item => {
+        const key = item.category + '\u0000' + item.name;
+        const entry = counts.get(key) || {name: item.name, count: 0};
+        entry.count++; counts.set(key, entry);
+    });
+    const repeats = [...counts.values()].filter(item => item.count > 1);
+    if (repeats.length) warnings.push('注文内に同じ項目が複数あります：' + repeats.map(item => item.name + '（' + item.count + '件）').join('、'));
+    return warnings;
+}
+
+function updateDuplicateNotice(lines = getBillingLines()) {
+    const notice = document.getElementById('duplicateNotice');
+    const warnings = getDuplicateWarnings(lines, parseOrder(orderInput.value));
+    notice.hidden = warnings.length === 0;
+    notice.replaceChildren();
+    if (!warnings.length) return;
+    const title = document.createElement('strong'); title.textContent = '重複の可能性があります';
+    const list = document.createElement('ul');
+    warnings.forEach(text => { const li = document.createElement('li'); li.textContent = text; list.append(li); });
+    const help = document.createElement('p'); help.textContent = '自動で除外・減額はしていません。注文内容と選択項目をご確認ください。';
+    notice.append(title, list, help);
+}
+
+function calculateTotal() {
+    const lines = getBillingLines();
+    const total = lines.reduce((sum, line) => sum + line.subtotal, 0);
+    totalPrice.textContent = yen(total);
+    renderBillingBreakdown(lines, total);
+    updateDuplicateNotice(lines);
+}
+
 // ==========================================
 // 修理
 // ==========================================
@@ -1910,4 +1923,5 @@ if (
 // メカニックの前回状態を復元
 // ==========================================
 
+orderInput.addEventListener("input", () => updateDuplicateNotice());
 restoreMechanicState();

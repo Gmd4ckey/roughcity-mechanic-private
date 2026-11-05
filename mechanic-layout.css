@@ -101,3 +101,23 @@
   .mechanic-page .repair-quantity { width: 48px; flex-basis: 48px; }
   .mechanic-page .sales-grid { grid-template-columns: 1fr; }
 }
+
+/* Itemized billing and advisory duplicate notices. */
+#priceBreakdown { width: min(720px, calc(100vw - 24px)); max-height: calc(100dvh - 32px); overflow: auto; padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); color: var(--text); box-shadow: 0 12px 50px #0005; }
+#priceBreakdown::backdrop { background: #0006; }
+.breakdown-heading, .breakdown-total { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+#priceBreakdown h2 { margin: 0; font-size: 18px; }
+#priceBreakdown .section-help { margin: 10px 0; }
+#breakdownContent { overflow-x: auto; }
+.billing-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.billing-table th, .billing-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.billing-table th:first-child, .billing-table td:first-child { text-align: left; white-space: normal; min-width: 120px; }
+.billing-table small { display: block; color: var(--subtext); font-size: 11px; margin-bottom: 3px; }
+.breakdown-total { padding-top: 18px; font-size: 15px; }
+.breakdown-total strong { font-size: 23px; }
+.duplicate-notice { padding: 14px 18px; border: 1px solid #ac7b26; border-radius: 12px; background: #fff6df; color: #694607; font-size: 13px; line-height: 1.6; }
+body.dark .duplicate-notice { background: #302719; color: #f2d598; }
+.duplicate-notice[hidden] { display: none; }
+.duplicate-notice ul { padding-left: 20px; margin: 6px 0; }
+.duplicate-notice p { margin: 4px 0 0; font-size: 12px; }
+@media (max-width: 600px) { #priceBreakdown { padding: 14px; } .billing-table th, .billing-table td { padding: 8px 5px; font-size: 12px; } }
