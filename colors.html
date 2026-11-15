@@ -680,7 +680,6 @@ main {
    実際のRGBデータとは別物
 ========================================== */
 
-const colorData = { gang: [], hangure: [], veteran: [], doctor: [], cartel: [] };
 
 
 /* ==========================================
@@ -1121,40 +1120,6 @@ function renderGroup(
 
 
 /* ==========================================
-   全表示
-========================================== */
-
-renderGroup(
-    colorData.gang,
-    "gangGrid"
-);
-
-
-renderGroup(
-    colorData.hangure,
-    "hangureGrid"
-);
-
-
-renderGroup(
-    colorData.veteran,
-    "veteranGrid"
-);
-
-
-renderGroup(
-    colorData.doctor,
-    "doctorGrid"
-);
-
-
-renderGroup(
-    colorData.cartel,
-    "cartelGrid"
-);
-
-
-/* ==========================================
    検索
 ========================================== */
 
@@ -1168,61 +1133,6 @@ const emptyMessage =
     document.getElementById(
         "emptyMessage"
     );
-
-
-colorSearch.addEventListener(
-    "input",
-    () => {
-
-        const keyword =
-            colorSearch
-                .value
-                .trim()
-                .toLowerCase();
-
-
-        const cards =
-            document.querySelectorAll(
-                ".team-card"
-            );
-
-
-        let visibleCount = 0;
-
-
-        cards.forEach(card => {
-
-            const visible =
-                card.dataset.search
-                    .includes(keyword);
-
-
-            card.style.display =
-                visible
-                    ? ""
-                    : "none";
-
-
-            if (visible) {
-
-                visibleCount++;
-
-            }
-
-        });
-
-
-        emptyMessage.textContent = cards.length === 0
-            ? 'カラーはまだ登録されていません。「＋ カラーを追加」から登録できます。'
-            : '該当するカラーがありません';
-
-        emptyMessage.style.display =
-            visibleCount === 0
-                ? "block"
-                : "none";
-
-    }
-);
 
 
 /* ==========================================

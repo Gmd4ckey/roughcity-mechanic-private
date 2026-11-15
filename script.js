@@ -1172,7 +1172,7 @@ function updateCustomCounts(items) {
 
         } else {
 
-            // その他も一旦10万円扱い
+            // カラー以外を外装の件数として集計
 
             exterior++;
         }

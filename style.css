@@ -550,125 +550,16 @@ select {
    半画面
 ========================= */
 
-.dashboard-layout {
-    display: flex;
-    flex-direction: column;
-
-    gap: 12px;
-}
-
 
 /* =========================
    全画面
 ========================= */
 
 @media (min-width: 1400px) {
-
-    .dashboard-layout {
-        display: grid;
-
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(0, 1fr);
-
-        gap: 12px;
-
-        align-items: start;
-    }
-
-
-    /* 左列 */
-    .summary-section {
-        grid-column: 1;
-        grid-row: 1;
-    }
-
-
-    .detail-section {
-        grid-column: 1;
-        grid-row: 2;
-
-        align-self: start;
-    }
-
-
-    /* 右列 */
-    .performance-section {
-        grid-column: 2;
-        grid-row: 1;
-    }
-
-
-    .custom-section {
-        grid-column: 2;
-        grid-row: 2;
-
-        align-self: start;
-    }
-
-
-    /* SUMMARYを3列表示 */
-
-    .summary-table thead {
-        display: none;
-    }
-
-
-    .summary-table,
-    .summary-table tbody {
-        display: block;
-        width: 100%;
-    }
-
-
-    .summary-table tbody {
-        display: grid;
-
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr));
-
-        gap: 8px 10px;
-    }
-
-
-    .summary-table tr {
-        display: flex;
-
-        align-items: center;
-        justify-content: space-between;
-
-        gap: 10px;
-
-        min-height: 42px;
-
-        padding: 8px 10px;
-
-        border:
-            1px solid var(--border);
-
-        border-radius: 7px;
-
-        background: var(--input-bg);
-    }
-
-
-    .summary-table td {
-        padding: 0;
-        border: none;
-    }
-
-
-    .summary-table td:first-child {
-        font-weight: 700;
-    }
-
-
-    .summary-table td:last-child {
-        margin-left: auto;
-    }
-
+    .detail-section, .custom-section { align-self: start; }
+    .summary-table tr { min-height: 42px; padding: 8px 10px; border-radius: 7px; }
+    .summary-table td:first-child { font-weight: 700; }
 }
-
 
 /* =========================
    半画面
