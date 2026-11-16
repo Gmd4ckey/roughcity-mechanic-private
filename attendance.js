@@ -4,8 +4,8 @@
  const status=$('attendanceStatus'),error=$('attendanceError'),start=$('weekStart');
  let members=[],days=[],loaded=false,reading=false,saving=false,store,signature='';
  let selected=core.localDate();
- const monday=()=>{const now=new Date(),day=now.getDay();return core.shiftDate(core.localDate(now),-(day===0?6:day-1));};
- selected=monday();start.value=selected;
+ const sunday=()=>{const now=new Date();return core.shiftDate(core.localDate(now),-now.getDay());};
+ selected=sunday();start.value=selected;
  const theme=$('themeButton');
  try{document.body.classList.toggle('dark',localStorage.getItem('theme')==='dark');}catch{}
  theme.addEventListener('click',()=>{document.body.classList.toggle('dark');try{localStorage.setItem('theme',document.body.classList.contains('dark')?'dark':'light');}catch{}});
@@ -53,13 +53,13 @@
  }
  function changeWeek(value){
   if(reading||saving){start.value=selected;return;}
-  try{core.weekDates(value);}catch(e){showError(e.message);start.value=selected;return;}
+  try{core.shiftDate(value,0);value=core.shiftDate(value,-new Date(value+'T00:00:00Z').getUTCDay());core.weekDates(value);}catch(e){showError(e.message);start.value=selected;return;}
   selected=value;start.value=selected;loaded=false;members=[];days=[];render(true);refresh();
  }
  start.addEventListener('change',()=>changeWeek(start.value));
  $('previousWeek').addEventListener('click',()=>changeWeek(core.shiftDate(selected,-7)));
  $('nextWeek').addEventListener('click',()=>changeWeek(core.shiftDate(selected,7)));
- $('currentWeek').addEventListener('click',()=>changeWeek(monday()));
+ $('currentWeek').addEventListener('click',()=>changeWeek(sunday()));
  $('refreshAttendance').addEventListener('click',refresh);
  $('addMemberForm').addEventListener('submit',async event=>{
   event.preventDefault();if(!loaded||reading||saving)return;
