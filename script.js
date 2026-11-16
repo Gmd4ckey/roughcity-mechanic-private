@@ -404,12 +404,13 @@ function getDuplicateWarnings(lines, items) {
     const warnings = [];
     const full = lines.find(line => line.name === 'フルカスタム');
     if (full) {
-        const included = ['engine', 'transmission', 'brake', 'oilpump', 'driveshaft', 'cylinder', 'battery', 'fuel', 'アーマー', 'ターボ', 'ニトロ新規'];
+        const included = ['engine', 'transmission', 'brake', 'oilpump', 'driveshaft', 'cylinder', 'battery', 'fuel', 'アーマー', 'ターボ'];
         const overlaps = lines.filter(line => line.group === '性能カスタム' && included.includes(line.key));
         if (overlaps.length) warnings.push('フルカスタムに含まれる項目も個別に選択されています：' + overlaps.map(line => line.name).join('、'));
         if (full.quantity > 1) warnings.push('フルカスタムの数量が ' + full.quantity + ' です。台数をご確認ください。');
     }
     if (lines.filter(line => line.name === 'ニトロ補充').length > 1) warnings.push('ニトロ補充が「修理・補充」と「販売」の両方で入力されています。');
+    if (lines.filter(line => line.name === 'ニトロ新規').length > 1) warnings.push('ニトロ新規が「修理・補充」と「性能カスタム」の両方で入力されています。');
     const counts = new Map();
     items.forEach(item => {
         const key = item.category + '\u0000' + item.name;
@@ -1329,11 +1330,14 @@ if (
     )
 ) {
 
+    // Older saved orders have six repair fields; retain full custom at its new position.
+    const savedRepairs = state.repairQuantities.slice();
+    if (savedRepairs.length === 6) savedRepairs.splice(5, 0, {value: "0"});
     repairQuantities.forEach(
         (input, index) => {
 
             const savedInput =
-                state.repairQuantities[index];
+                savedRepairs[index];
 
             if (
                 savedInput
