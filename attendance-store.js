@@ -12,7 +12,8 @@
  class Store{
   constructor(config,fetcher=root.fetch.bind(root)){if(!config||!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(config.url)||!/^sb_publishable_[A-Za-z0-9_-]+$/.test(config.publishableKey))throw new Error('共有保存先の設定を確認してください。');this.config=config;this.fetcher=fetcher;}
   async request(path,body){
-   let response;try{response=await this.fetcher(this.config.url+'/rest/v1/'+path,{method:body?'POST':'GET',headers:{apikey:this.config.publishableKey,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined,cache:'no-store',signal:AbortSignal.timeout(12000)});}catch{throw new Error('共有保存先に接続できません。「一覧を更新」で再試行してください。続く場合は保存先の稼働状況を確認してください。');}
+   const authToken = await root.SiteAuth.token();
+   let response;try{response=await this.fetcher(this.config.url+'/rest/v1/'+path,{method:body?'POST':'GET',headers:{Authorization:"Bearer "+authToken,apikey:this.config.publishableKey,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined,cache:'no-store',signal:AbortSignal.timeout(12000)});}catch{throw new Error('共有保存先に接続できません。「一覧を更新」で再試行してください。続く場合は保存先の稼働状況を確認してください。');}
    const data=await response.json().catch(()=>null);
    if(!response.ok){const messages={edit_conflict:'別の人が先に変更しました。一覧を更新してから、もう一度操作してください。',member_missing:'この名前は名簿から削除されています。一覧を更新してください。',write_limit:'更新が集中しています。1分ほど待って再試行してください。',member_limit:'名簿は200名までです。',invalid_name:'名前を1〜60文字で入力してください。',invalid_day:'日付を確認してください。'};throw new Error(data?.code==='23505'?'同じ名前が登録されています。':messages[data?.message]||'共有保存に失敗しました。変更は確定していません。一覧を更新してください。');}
    return data;

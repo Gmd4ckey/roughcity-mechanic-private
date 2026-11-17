@@ -45,9 +45,10 @@
             this.fetcher = fetcher;
         }
         async request(path, body) {
+            const authToken = await root.SiteAuth.token();
             const response = await this.fetcher(this.config.url + '/rest/v1/' + path, {
                 method: body ? 'POST' : 'GET',
-                headers: { apikey: this.config.publishableKey, 'Content-Type': 'application/json' },
+                headers: { Authorization: "Bearer " + authToken, apikey: this.config.publishableKey, 'Content-Type': 'application/json' },
                 body: body ? JSON.stringify(body) : undefined,
                 signal: AbortSignal.timeout(12000), cache: 'no-store'
             });
