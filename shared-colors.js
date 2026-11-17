@@ -199,7 +199,7 @@
             const result = await store.save(team, editing?.id ?? null, editing?.version ?? null);
             // A received success is required before closing the draft.
             editing = { id: result.id, version: result.version };
-            dirty = false; form.hidden = true; status.textContent = '全員が見られるように保存しました。';
+            dirty = false; form.hidden = true; status.textContent = '許可されたメンバーが見られるように保存しました。';
         } catch (error) { editorStatus.textContent = error.message + ' 入力内容は残っています。'; }
         finally {
             saving = false; fieldset.disabled = false; addButton.disabled = !loaded;

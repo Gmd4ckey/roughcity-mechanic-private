@@ -646,7 +646,7 @@ main {
         ※ カードの色は識別用です。ゲーム内の実際の車両カラーとは多少異なる場合があります。
     </div>
 
-<p class="sharing-note">保存したカラーは全員が閲覧・編集できます。更新は15秒ごとに反映されます。</p></section><section class="shared-panel" id="sharedPanel" hidden aria-labelledby="sharedTitle">
+<p class="sharing-note">保存したカラーは許可されたメンバーが閲覧・編集できます。更新は15秒ごとに反映されます。</p></section><section class="shared-panel" id="sharedPanel" hidden aria-labelledby="sharedTitle">
  <h2 id="sharedTitle">カラーを登録</h2>
  <p class="help-text">メイン・サブなど、必要なカラーをまとめて登録できます。</p>
  <form id="colorEditor" hidden>
@@ -664,7 +664,7 @@ main {
    </div>
    <p class="help-text">色名・RGB・HEXを自由に入力できます。必要な項目だけチェックを付けてください。各チーム12項目まで。</p>
    <div id="editorColors"></div>
-   <div class="shared-actions"><button type="button" id="addColorRow">＋ 項目を追加</button><button type="submit">登録して全員に共有</button><button type="button" id="cancelColorEdit">閉じる</button></div>
+   <div class="shared-actions"><button type="button" id="addColorRow">＋ 項目を追加</button><button type="submit">登録してメンバーに共有</button><button type="button" id="cancelColorEdit">閉じる</button></div>
   </fieldset>
   <p id="editorStatus" role="status" aria-live="polite"></p>
  </form>
@@ -1214,7 +1214,7 @@ updateThemeButton();
 
 
 <script src="color-store.js?v=20261117-auth"></script>
-<script src="shared-colors.js?v=20261023-delete2"></script>
+<script src="shared-colors.js?v=20261117-auth"></script>
 <script src="theme-ui.js?v=20261023-1"></script>
 </body>
 </html>
