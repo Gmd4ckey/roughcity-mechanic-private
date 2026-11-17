@@ -11,7 +11,10 @@
    for(const member of members){
     const row=document.createElement('section');row.className='member-entry';
     const info=document.createElement('div'),name=document.createElement('p'),id=document.createElement('small');
-    name.textContent=(member.display_name||member.discord_id)+' · '+roles[member.role];id.textContent=member.discord_id;info.append(name,id);row.append(info);
+    const label=member.display_name||member.username||'名前未取得';
+    name.textContent=label+' · '+roles[member.role];id.textContent=member.username?'@'+member.username:'';info.append(name,id);
+    const details=document.createElement('details'),summary=document.createElement('summary'),identity=document.createElement('small');
+    summary.textContent='識別情報';identity.textContent='Discord ID：'+member.discord_id;details.append(summary,identity);info.append(details);row.append(info);
     const owner=SiteAuth.access.role==='owner';
     if(member.role!=='owner'&&member.discord_id!==SiteAuth.access.discord_id&&(owner||member.role!=='admin')){
      const actions=document.createElement('div');actions.className='access-actions';
@@ -19,7 +22,7 @@
       if(role===member.role)continue;
       const button=document.createElement('button');button.textContent={member:member.role==='admin'?'管理者を解除':'利用を許可',admin:'管理者にする',blocked:'利用を停止'}[role];
       button.onclick=async()=>{
-       if(busy||!confirm((member.display_name||member.discord_id)+'（'+member.discord_id+'）を「'+roles[role]+'」に変更しますか？'))return;
+       if(busy||!confirm(label+(member.username?'（@'+member.username+'）':'')+'を「'+roles[role]+'」に変更しますか？'))return;
        busy=true;disabled(true);
        try{await SiteAuth.rpc('site_set_role',{p_discord_id:member.discord_id,p_role:role,p_version:member.version});status.textContent='変更しました。';}
        catch(e){status.textContent=SiteAuth.errorText(e);}

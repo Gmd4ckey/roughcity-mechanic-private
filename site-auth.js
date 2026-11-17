@@ -45,7 +45,7 @@
     await refresh();
     if(loginPage){
      document.getElementById('signOut').hidden=false;
-     text('discordId','Discord ID：'+access.discord_id);
+     text('discordId',(access.display_name||access.username||'Discordアカウント')+(access.username?'（@'+access.username+'）':''));
      if(['owner','admin','member'].includes(access.role)){location.replace(new URL('index.html',base));return true;}
      text('authMessage',access.role==='blocked'?'現在、利用が許可されていません。管理者へ連絡してください。':access.role==='pending'?'承認待ちです。管理者の承認後に「承認状況を確認」を押してください。':'ログインできました。利用申請を送ってください。');
      document.getElementById('requestAccess').hidden=access.role!=='unregistered';
