@@ -1,0 +1,11 @@
+html:not(.site-authorized) body:not(.login-page){visibility:hidden}
+html:not(.site-authorized)::before{content:'ログインを確認しています…';position:fixed;inset:40% 0 auto;text-align:center;color:#ddd;font:16px sans-serif}
+html:has(.login-page)::before{display:none}
+.site-account{display:flex;justify-content:flex-end;align-items:center;gap:16px;padding:8px 20px;font:14px sans-serif;background:var(--card,#1b2028);color:var(--text,#fff)}
+.site-account a{color:inherit}.site-account button,.access-panel button{border:1px solid #596173;background:#30384b;color:#fff;border-radius:8px;padding:10px 14px;cursor:pointer}
+.login-page,.members-page{background:#101418;color:#edf0f7;font:15px/1.6 system-ui,sans-serif;margin:0}
+.access-panel{max-width:900px;margin:48px auto;padding:24px;background:#1c2430;border:1px solid #3a4658;border-radius:14px}
+.login-page .access-panel{max-width:480px}.access-panel h1{font-size:24px}.access-panel a{color:#c5c8ff}
+.access-actions{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}.access-panel small{color:#aeb9cc}
+.member-entry{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-top:1px solid #3a4658}.member-entry p{margin:0}.member-entry small{display:block;overflow-wrap:anywhere}.member-entry .access-actions{margin:0}.access-panel button:disabled{opacity:.5;cursor:wait}
+@media(max-width:600px){.access-panel{margin:16px;padding:18px}.member-entry{align-items:flex-start;flex-direction:column}.site-account{gap:10px;padding:8px;font-size:12px}}
