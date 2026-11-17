@@ -25,6 +25,20 @@
  }
  function addNavigation(){
   const nav=document.createElement('div');nav.className='site-account';
+  if(document.body.classList.contains('mechanic-page')){
+   const command=document.createElement('div');command.className='mechanic-command';
+   const field=document.createElement('input');field.type='text';field.value='/mechanicxp';field.readOnly=true;field.setAttribute('aria-label','メカニックコマンド');
+   const copy=document.createElement('button');copy.type='button';copy.textContent='コピー';copy.setAttribute('aria-label','/mechanicxpをコピー');
+   const status=document.createElement('span');status.className='command-copy-status';status.setAttribute('role','status');
+   let timer;
+   copy.onclick=async()=>{
+    clearTimeout(timer);
+    try{await navigator.clipboard.writeText(field.value);copy.textContent='コピー済み';status.textContent='コピーしました';}
+    catch{field.focus();field.select();status.textContent='選択した文字をコピーしてください';}
+    timer=setTimeout(()=>{copy.textContent='コピー';status.textContent='';},2500);
+   };
+   command.append(field,copy,status);nav.append(command);
+  }
   const role=document.createElement('span');role.textContent={owner:'オーナー',admin:'管理者',member:'メンバー'}[access.role];nav.append(role);
   if(['owner','admin'].includes(access.role)){const a=document.createElement('a');a.href='members.html';a.textContent='メンバー管理';nav.append(a);}
   const button=document.createElement('button');button.type='button';button.textContent='ログアウト';button.onclick=()=>logout().catch(()=>text('authMessage','ログアウトに失敗しました。'));nav.append(button);

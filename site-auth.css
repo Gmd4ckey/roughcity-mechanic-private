@@ -9,3 +9,9 @@ html:has(.login-page)::before{display:none}
 .access-actions{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}.access-panel small{color:#aeb9cc}
 .member-entry{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-top:1px solid #3a4658}.member-entry p{margin:0}.member-entry small{display:block;overflow-wrap:anywhere}.member-entry .access-actions{margin:0}.access-panel button:disabled{opacity:.5;cursor:wait}
 @media(max-width:600px){.access-panel{margin:16px;padding:18px}.member-entry{align-items:flex-start;flex-direction:column}.site-account{gap:10px;padding:8px;font-size:12px}}
+
+.mechanic-command{display:flex;align-items:center;gap:8px;margin-right:auto;position:relative}
+.mechanic-command input{width:128px;box-sizing:border-box;border:1px solid var(--border,#596173);background:var(--input-bg,#15191e);color:var(--text,#fff);border-radius:7px;padding:8px;font:14px monospace}
+.site-account .mechanic-command button{padding:8px 10px;white-space:nowrap}
+.command-copy-status{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(max-width:600px){.mechanic-page .site-account{flex-wrap:wrap}.mechanic-command{flex-basis:100%}}
