@@ -15,7 +15,7 @@
   const waiting=reading||saving;
   ['weekStart','previousWeek','nextWeek','currentWeek','refreshAttendance'].forEach(id=>$(id).disabled=waiting);
   $('addMemberButton').disabled=waiting||!loaded;
-  document.querySelectorAll('#attendanceBody input,#memberList button').forEach(el=>el.disabled=waiting||!loaded);
+  document.querySelectorAll('#attendanceBody input,#memberList button').forEach(el=>el.disabled=waiting||!loaded||el.dataset.boundary==='true');
  }
  function render(force=false){
   const dates=core.weekDates(selected),nextSignature=JSON.stringify({selected,members,days});
@@ -35,7 +35,17 @@
   });
   const footer=element('tr'),footerName=element('th','出勤人数');footerName.scope='row';footer.append(footerName);totals.forEach(total=>footer.append(element('td',total+'人')));footer.append(element('td','—'));foot.append(footer);
   $('attendanceEmpty').hidden=!loaded||members.length>0;$('memberCount').textContent='登録 '+members.length+'名';
-  const list=$('memberList');list.replaceChildren();members.forEach(member=>{const li=element('li'),name=element('span',member.name),button=element('button','削除');button.type='button';button.className='danger';button.setAttribute('aria-label',member.name+'を名簿から削除');button.addEventListener('click',()=>confirmRemove(member));li.append(name,button);list.append(li);});busy();
+  const list=$('memberList');list.replaceChildren();members.forEach((member,index)=>{const li=element('li'),name=element('span',member.name),actions=element('div'),button=element('button','削除');name.className='member-name';actions.className='member-actions';
+   [-1,1].forEach(direction=>{const moveButton=element('button',direction===-1?'上へ':'下へ');moveButton.type='button';moveButton.dataset.member=member.id;moveButton.dataset.direction=direction;moveButton.dataset.boundary=String(direction===-1?index===0:index===members.length-1);moveButton.setAttribute('aria-label',member.name+'を'+(direction===-1?'上':'下')+'へ移動');moveButton.addEventListener('click',()=>moveMember(member,direction));actions.append(moveButton);});
+   button.type='button';button.className='danger';button.setAttribute('aria-label',member.name+'を名簿から削除');button.addEventListener('click',()=>confirmRemove(member));actions.append(button);li.append(name,actions);list.append(li);});busy();
+ }
+ async function moveMember(member,direction){
+  if(!loaded||reading||saving)return;
+  saving=true;busy();showError('');status.textContent='並び順を保存しています…';
+  let success=false;
+  try{const updated=await store.move(member.id,direction,members);if(!Array.isArray(updated)||updated.length!==members.length||!updated.some(m=>m.id===member.id))throw new Error('保存結果を確認できません。一覧を更新してください。');members=updated;success=true;status.textContent='並び順を全員に共有しました。';}
+  catch(e){showError(e.message);status.textContent='並び順を確定できませんでした。一覧を更新してください。';}
+  finally{saving=false;render(true);busy();if(success){const buttons=Array.from(document.querySelectorAll('#memberList button[data-member]')).filter(b=>b.dataset.member===member.id&&!b.disabled);(buttons.find(b=>Number(b.dataset.direction)===direction)||buttons[0])?.focus();}}
  }
  async function refresh(){
   if(reading||saving||!store)return;

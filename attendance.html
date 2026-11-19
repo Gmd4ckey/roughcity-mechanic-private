@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="site-auth.css?v=20261117">
 <script src="colors-config.js"></script>
 <script src="site-auth.js?v=20261117"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>勤怠管理</title>
-<link rel="stylesheet" href="style.css?v=20261116-cleanup"><link rel="stylesheet" href="theme-ui.css?v=20261105-2"><link rel="stylesheet" href="attendance.css?v=20261116-1"></head>
+<link rel="stylesheet" href="style.css?v=20261116-cleanup"><link rel="stylesheet" href="theme-ui.css?v=20261105-2"><link rel="stylesheet" href="attendance.css?v=20261119-order"></head>
 <body class="attendance-page">
 <header><h1>勤怠管理</h1><div class="attendance-nav"><nav class="page-nav"><a href="index.html" class="nav-button">🔧 メカニック</a><a href="colors.html" class="nav-button">🎨 ギャング・半グレカラー</a><a href="history.html" class="nav-button">🧾 会計履歴</a><a href="attendance.html" class="nav-button active" aria-current="page">📅 勤怠管理</a></nav><button id="themeButton" type="button" aria-label="テーマを切り替え">☀</button></div></header>
 <main>
@@ -14,9 +14,9 @@
 <div class="table-scroll" tabindex="0" role="region" aria-label="1週間の勤怠表"><table id="attendanceTable"><caption id="weekCaption"></caption><thead id="attendanceHead"></thead><tbody id="attendanceBody"></tbody><tfoot id="attendanceFoot"></tfoot></table></div>
 <p id="attendanceEmpty" class="attendance-empty" hidden>名簿はまだ登録されていません。下の「名簿を管理」から名前を追加してください。</p><p class="help legend">☑ 出勤　□ チェックなし　<span id="memberCount"></span></p>
 </section>
-<details class="roster-panel" open><summary>名簿を管理 <small>名前の追加・削除</small></summary><div class="roster-content"><form id="addMemberForm"><label for="memberName">名前</label><div class="add-member-row"><input id="memberName" maxlength="60" required placeholder="名前を入力" autocomplete="off"><button id="addMemberButton" type="submit" disabled>名簿に追加</button></div></form><p class="help">名簿は全週共通です。削除すると全週の一覧から非表示になります。</p><ul id="memberList"></ul></div></details>
+<details class="roster-panel" open><summary>名簿を管理 <small>名前の追加・並び替え・削除</small></summary><div class="roster-content"><form id="addMemberForm"><label for="memberName">名前</label><div class="add-member-row"><input id="memberName" maxlength="60" required placeholder="名前を入力" autocomplete="off"><button id="addMemberButton" type="submit" disabled>名簿に追加</button></div></form><p class="help">「上へ」「下へ」で並び替えできます。並び順は全員・全週共通です。削除すると全週の一覧から非表示になります。</p><ul id="memberList"></ul></div></details>
 <p class="sharing-note">このページの名簿・出勤状況は、許可されたメンバーが閲覧・編集できます。15秒ごとに更新します。</p>
 </main>
 <dialog id="removeMemberDialog" aria-labelledby="removeMemberTitle"><h2 id="removeMemberTitle">名簿から削除しますか？</h2><p id="removeMemberText"></p><p class="help">全員の一覧から非表示になります。過去の記録は保存先に保持されます。</p><form method="dialog"><button value="cancel" autofocus>キャンセル</button><button value="remove" class="danger">削除する</button></form></dialog>
-<script src="attendance-store.js?v=20261117-auth"></script><script src="attendance.js?v=20261116-sunday"></script><script src="theme-ui.js?v=20261023-1"></script>
+<script src="attendance-store.js?v=20261119-order"></script><script src="attendance.js?v=20261119-order"></script><script src="theme-ui.js?v=20261023-1"></script>
 </body></html>
