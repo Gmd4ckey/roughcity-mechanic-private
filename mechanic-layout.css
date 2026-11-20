@@ -125,3 +125,13 @@ body.dark .duplicate-notice { background: #302719; color: #f2d598; }
 .duplicate-notice ul { padding-left: 20px; margin: 6px 0; }
 .duplicate-notice p { margin: 4px 0 0; font-size: 12px; }
 @media (max-width: 600px) { #priceBreakdown { padding: 14px; } .billing-table th, .billing-table td { padding: 8px 5px; font-size: 12px; } }
+
+/* Shared quantity controls retain the original inputs and billing events. */
+.mechanic-page .quantity-control{display:inline-flex;align-items:center;flex:0 0 auto;border:1px solid var(--border);border-radius:8px;background:var(--input-bg);overflow:hidden}
+.mechanic-page .quantity-control button{width:36px;min-height:36px;padding:0;border:0;border-radius:0;background:transparent;color:var(--text);font-size:20px;cursor:pointer}
+.mechanic-page .quantity-control button:hover{background:#8c299c22}
+.mechanic-page .quantity-control input{width:40px;flex:0 0 40px;min-width:0;padding:7px 0;border:0;border-radius:0;text-align:center;background:transparent;font-size:14px;appearance:textfield;-moz-appearance:textfield}
+.mechanic-page .quantity-control input::-webkit-inner-spin-button,.mechanic-page .quantity-control input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.mechanic-page .quantity-control:focus-within{outline:2px solid #a541b5;outline-offset:2px}
+.mechanic-page .quantity-control button:focus-visible{outline:2px solid #a541b5;outline-offset:-3px}
+@media(max-width:600px){.mechanic-page .repair-item{flex-direction:column;align-items:flex-start;justify-content:space-between;gap:8px}}
