@@ -2,7 +2,7 @@
  'use strict';
  const materials=['ゴム','スティール','プラスチック','鉄くず','空のニトロボトル'];
  const recipes=[];
- const add=(category,name,tier,amounts,note='')=>recipes.push({category,name,tier,amounts,note});
+ const add=(category,name,tier,amounts,note='')=>{if(tier===1||tier===2)return;recipes.push({category,name,tier,amounts,note});};
  add('整備・修理','メカニック専用ボックス',0,[200,150,150]);
  add('整備・修理','エンジンオイル',0,[1]);
  add('整備・修理','スパークプラグ',0,[0,1], '素材');add('整備・修理','スパークプラグ',0,[0,0,0,30],'鉄くず');
