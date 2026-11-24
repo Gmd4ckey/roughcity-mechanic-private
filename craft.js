@@ -19,7 +19,7 @@
  [4,6,12].forEach((n,i)=>add('追加パーツ','シリンダーヘッド',i+1,[n]));
  for(let t=1;t<=3;t++)add('追加パーツ','バッテリーケーブル',t,[2*t,2*t]);
  for(let t=1;t<=3;t++)add('追加パーツ','燃料タンク',t,[0,2*t,2*t]);
- add('ニトロ','ニトロボトル',0,[0,0,0,0,1],'空ボトルを使用');add('ニトロ','ニトロボトル',0,[37,5,5],'素材で作成');add('ニトロ','ニトロボトル',0,[2,0,3,45],'鉄くずを使用');
+ add('ニトロ','ニトロボトル',0,[0,0,0,0,1],'空ボトルを使用');add('ニトロ','ニトロボトル',0,[3,5,5],'素材で作成');add('ニトロ','ニトロボトル',0,[2,0,3,45],'鉄くずを使用');
  const $=id=>document.getElementById(id),el=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
  const quantities=recipes.map(()=>0),rows=[];
  const fmt=n=>n.toLocaleString('ja-JP');
@@ -30,8 +30,8 @@
  }
  recipes.forEach((recipe,i)=>{
   const row=el('tr'),name=el('th',recipe.name);name.scope='row';if(recipe.note)name.append(el('small',recipe.note));row.append(name,el('td',recipe.tier?'Tier '+recipe.tier:'—'));
-  materials.forEach((_,m)=>row.append(el('td',recipe.amounts[m]?fmt(recipe.amounts[m]):'—')));
-  const td=el('td'),control=el('div');control.className='craft-quantity';const input=el('input');input.type='number';input.min='0';input.max='9999';input.step='1';input.inputMode='numeric';input.value='0';
+  materials.forEach((material,m)=>{const cell=el('td',recipe.amounts[m]?fmt(recipe.amounts[m]):'—');cell.dataset.label=material;row.append(cell);});
+  const td=el('td'),control=el('div');td.dataset.label='作成個数';control.className='craft-quantity';const input=el('input');input.type='number';input.min='0';input.max='9999';input.step='1';input.inputMode='numeric';input.value='0';
   const label=recipe.name+(recipe.tier?' Tier '+recipe.tier:'')+(recipe.note?' '+recipe.note:'');input.setAttribute('aria-label',label+'の作成個数');
   const update=value=>{quantities[i]=Math.min(9999,Math.max(0,Math.floor(Number(value)||0)));input.value=String(quantities[i]);row.classList.toggle('chosen',quantities[i]>0);total();};
   input.addEventListener('input',()=>update(input.value));
