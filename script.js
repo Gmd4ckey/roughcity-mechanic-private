@@ -947,6 +947,10 @@ function parseOrder(text) {
 // SUMMARY
 // ==========================================
 
+function sortOrderItems(items) {
+    return [...items].sort((a, b) => (nameOrder[a.name] ?? 9999) - (nameOrder[b.name] ?? 9999));
+}
+
 function renderSummary(items) {
 
     const counts = {};
@@ -965,30 +969,9 @@ function renderSummary(items) {
     });
 
 
-    const sortedCategories =
-        Object.entries(counts)
-            .sort(
-                ([categoryA], [categoryB]) => {
-
-                    const orderA =
-                        categoryOrder[
-                            categoryA
-                        ] ?? 9999;
-
-
-                    const orderB =
-                        categoryOrder[
-                            categoryB
-                        ] ?? 9999;
-
-
-                    return (
-                        orderA -
-                        orderB
-                    );
-                }
-            );
-
+    // Match the first appearance of each category in the detail list.
+    const sortedCategories = [...new Set(sortOrderItems(items).map(item => item.category))]
+        .map(category => [category, counts[category]]);
 
     let html = `
 
@@ -1061,27 +1044,7 @@ function renderSummary(items) {
 
 function renderDetails(items) {
 
-const sortedItems =
-    [...items].sort(
-        (a, b) => {
-
-            const nameA =
-                nameOrder[
-                    a.name
-                ] ?? 9999;
-
-            const nameB =
-                nameOrder[
-                    b.name
-                ] ?? 9999;
-
-            return (
-                nameA -
-                nameB
-            );
-        }
-    );
-
+    const sortedItems = sortOrderItems(items);
 
     let html = `
 
