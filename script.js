@@ -1129,16 +1129,24 @@ const orderPaintNames = [
 const normalizePaintName = value => value.normalize('NFKC').replace(/[\s・･]/g, '');
 const orderPaintNumbers = new Map(orderPaintNames.map((name, index) => [normalizePaintName(name), index + 1]));
 
+// Matte uses its own menu numbering, separate from metallic/classic.
+const orderMatteNames = ['ブラック','グレー','ライトグレー','アイスホワイト','ブルー','ダークブルー','ミッドナイトブルー','ミッドナイトパープル','シャフターパープル','レッド','ダークレッド','オレンジ','イエロー','ライムグリーン','グリーン','フォレストグリーン','フォリッジグリーン','オリーブドラブ','ダークアース','デザートタン'];
+const orderMatteNumbers = new Map(orderMatteNames.map((name,index)=>[normalizePaintName(name),index+1]));
+
 function formatOrderColorDetail(item) {
     if (item.category !== 'カラー') return item.detail;
     const detail = item.detail;
-    // Only these two finishes share the supplied numbering. Keep RGB/HEX and other finishes as entered.
-    const finish = /[（(【\[]\s*(メタリック|クラシック)\s*[）)】\]]/g;
-    if (!finish.test(detail)) return detail;
-    const colorName = detail.replace(finish, '').trim();
-    // Existing numbered entries must not acquire a second number.
+    const finish = /[（(【\[]\s*(メタリック|クラシック|マット)\s*[）)】\]]/g;
+    const match = finish.exec(detail);
+    let colorName = detail.replace(finish, '').trim();
     if (/^\d+\s*[.．・:：\-]/.test(colorName)) return detail;
-    const number = orderPaintNumbers.get(normalizePaintName(colorName));
+    const normalized = normalizePaintName(colorName);
+    let number;
+    if (match?.[1] === 'マット' || (!match && normalized.startsWith('マット'))) {
+        number = orderMatteNumbers.get(normalized.replace(/^マット/, ''));
+    } else if (match) {
+        number = orderPaintNumbers.get(normalized);
+    }
     return number ? number + '. ' + detail : detail;
 }
 
