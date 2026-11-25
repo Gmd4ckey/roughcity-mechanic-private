@@ -1133,10 +1133,13 @@ const orderPaintNumbers = new Map(orderPaintNames.map((name, index) => [normaliz
 const orderMatteNames = ['ブラック','グレー','ライトグレー','アイスホワイト','ブルー','ダークブルー','ミッドナイトブルー','ミッドナイトパープル','シャフターパープル','レッド','ダークレッド','オレンジ','イエロー','ライムグリーン','グリーン','フォレストグリーン','フォリッジグリーン','オリーブドラブ','ダークアース','デザートタン'];
 const orderMatteNumbers = new Map(orderMatteNames.map((name,index)=>[normalizePaintName(name),index+1]));
 
+const orderChromeNames = ['ブラッシュドスチール','ブラッシュドブラックスチール','ブラッシュドアルミニウム','ピュアゴールド','ブラッシュドゴールド','クローム'];
+const orderChromeNumbers = new Map(orderChromeNames.map((name,index)=>[normalizePaintName(name),index+1]));
+
 function formatOrderColorDetail(item) {
     if (item.category !== 'カラー') return item.detail;
     const detail = item.detail;
-    const finish = /[（(【\[]\s*(メタリック|クラシック|マット)\s*[）)】\]]/g;
+    const finish = /[（(【\[]\s*(メタリック|クラシック|マット|クローム|金属)\s*[）)】\]]/g;
     const match = finish.exec(detail);
     let colorName = detail.replace(finish, '').trim();
     if (/^\d+\s*[.．・:：\-]/.test(colorName)) return detail;
@@ -1144,6 +1147,8 @@ function formatOrderColorDetail(item) {
     let number;
     if (match?.[1] === 'マット' || (!match && normalized.startsWith('マット'))) {
         number = orderMatteNumbers.get(normalized.replace(/^マット/, ''));
+    } else if (match?.[1] === 'クローム' || match?.[1] === '金属' || (!match && orderChromeNumbers.has(normalized))) {
+        number = orderChromeNumbers.get(normalized);
     } else if (match) {
         number = orderPaintNumbers.get(normalized);
     }
