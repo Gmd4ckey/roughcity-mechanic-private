@@ -214,7 +214,8 @@ const nameOrder = {
 
     // ホイール本体
 
-    "Wheels": 150,
+    "フロントホイール": 150,
+    "リアホイール": 151,
 
     "ホイールリム": 160,
 
@@ -708,7 +709,8 @@ function getCategory(name, detail) {
     // カスタムホイール
 
     if (
-        name === "Wheels" ||
+        name === "フロントホイール" ||
+        name === "リアホイール" ||
         name === "ホイールリム" ||
         name === "ホイールリム（バイク用）"
     ) {
@@ -889,6 +891,12 @@ if (
 // オーダーシート解析
 // ==========================================
 
+function normalizeOrderName(name) {
+    if (/^戻る\s*Wheels?$/i.test(name)) return "リアホイール";
+    if (/^Wheels?$/i.test(name)) return "フロントホイール";
+    return name;
+}
+
 function parseOrder(text) {
 
     const result = [];
@@ -908,9 +916,7 @@ function parseOrder(text) {
         ) !== null
     ) {
 
-        const name =
-            match[1]
-                .trim();
+        const name = normalizeOrderName(match[1].trim());
 
 
         const detail =
