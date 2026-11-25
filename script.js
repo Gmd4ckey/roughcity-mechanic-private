@@ -1048,6 +1048,100 @@ function renderSummary(items) {
 // DETAIL LIST
 // ==========================================
 
+// Metallic/classic menu numbers supplied in the color reference images.
+const orderPaintNames = [
+    "ブラック",
+    "カーボンブラック",
+    "グラファイト",
+    "アンスラサイトブラック",
+    "ブラックスチール",
+    "ダークスチール",
+    "シルバー",
+    "青みがかったシルバー",
+    "ロールドスチール",
+    "シャドウシルバー",
+    "ストーンシルバー",
+    "ミッドナイトシルバー",
+    "鋳鉄シルバー",
+    "レッド",
+    "トリノレッド",
+    "フォーミュラレッド",
+    "ラバレッド",
+    "ブレイズレッド",
+    "グレースレッド",
+    "ガーネットレッド",
+    "サンセットレッド",
+    "カベルネレッド",
+    "ワインレッド",
+    "キャンディレッド",
+    "ホットピンク",
+    "フィスター・ピンク",
+    "サーモンピンク",
+    "サンライズオレンジ",
+    "オレンジ",
+    "ブライトオレンジ",
+    "ゴールド",
+    "ブロンズ",
+    "イエロー",
+    "レースイエロー",
+    "デューイエロー",
+    "ダークグリーン",
+    "レーシンググリーン",
+    "シーグリーン",
+    "オリーブグリーン",
+    "ブライトグリーン",
+    "ガソリン・グリーン",
+    "ライムグリーン",
+    "ミッドナイトブルー",
+    "ギャラクシーブルー",
+    "ダークブルー",
+    "サクソンブルー",
+    "ブルー",
+    "マリナーブルー",
+    "ハーバーブルー",
+    "ダイヤモンドブルー",
+    "サーフブルー",
+    "ノーティカルブルー",
+    "レーシングブルー",
+    "ウルトラブルー",
+    "ライトブルー",
+    "チョコレートブラウン",
+    "バイソンブラウン",
+    "クリーンブラウン",
+    "フェルツァーブラウン",
+    "メイプルブラウン",
+    "ビーチウッドブラウン",
+    "シエンナブラウン",
+    "サドルブラウン",
+    "モスブラウン",
+    "ウッドビーチブラウン",
+    "ストローブラウン",
+    "サンディブラウン",
+    "ブリーチドブラウン",
+    "シャフターパープル",
+    "スピネーカーパープル",
+    "ミッドナイトパープル",
+    "ブライトパープル",
+    "クリーム",
+    "アイスホワイト",
+    "フロストホワイト"
+];
+const normalizePaintName = value => value.normalize('NFKC').replace(/[\s・･]/g, '');
+const orderPaintNumbers = new Map(orderPaintNames.map((name, index) => [normalizePaintName(name), index + 1]));
+
+function formatOrderColorDetail(item) {
+    if (item.category !== 'カラー') return item.detail;
+    const detail = item.detail;
+    // Only these two finishes share the supplied numbering. Keep RGB/HEX and other finishes as entered.
+    const finish = /[（(【\[]\s*(メタリック|クラシック)\s*[）)】\]]/g;
+    if (!finish.test(detail)) return detail;
+    const colorName = detail.replace(finish, '').trim();
+    // Existing numbered entries must not acquire a second number.
+    if (/^\d+\s*[.．・:：\-]/.test(colorName)) return detail;
+    const number = orderPaintNumbers.get(normalizePaintName(colorName));
+    return number ? number + '. ' + detail : detail;
+}
+
 function renderDetails(items) {
 
     const sortedItems = sortOrderItems(items);
@@ -1097,7 +1191,7 @@ function renderDetails(items) {
                     </td>
 
                     <td>
-                        ${item.detail}
+                        ${formatOrderColorDetail(item)}
                     </td>
 
                 </tr>
