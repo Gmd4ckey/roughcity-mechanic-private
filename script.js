@@ -1136,10 +1136,96 @@ const orderMatteNumbers = new Map(orderMatteNames.map((name,index)=>[normalizePa
 const orderChromeNames = ['ブラッシュドスチール','ブラッシュドブラックスチール','ブラッシュドアルミニウム','ピュアゴールド','ブラッシュドゴールド','クローム'];
 const orderChromeNumbers = new Map(orderChromeNames.map((name,index)=>[normalizePaintName(name),index+1]));
 
+const orderChameleonNames = [
+    "アノダイズドレッド",
+    "アノダイズドワイン",
+    "アノダイズドパープル",
+    "アノダイズドブルー",
+    "アノダイズドグリーン",
+    "アノダイズドライム",
+    "アノダイズドカッパー",
+    "アノダイズドブロンズ",
+    "アノダイズドシャンパン",
+    "アノダイズドゴールド",
+    "グリーン/ブルー フリップ",
+    "グリーン/レッド フリップ",
+    "グリーン/ブラウン フリップ",
+    "グリーン/ターコイズ フリップ",
+    "グリーン/パープル フリップ",
+    "ティール/パープル フリップ",
+    "ターコイズ/レッド フリップ",
+    "ターコイズ/パープル フリップ",
+    "シアン/パープル フリップ",
+    "ブルー/ピンク フリップ",
+    "ブルー/グリーン フリップ",
+    "パープル/レッド フリップ",
+    "パープル/グリーン フリップ",
+    "マゼンタ/グリーン フリップ",
+    "マゼンタ/イエロー フリップ",
+    "バーガンディ/グリーン フリップ",
+    "マゼンタ/シアン フリップ",
+    "カッパー/パープル フリップ",
+    "マゼンタ/オレンジ フリップ",
+    "レッド/オレンジ フリップ",
+    "オレンジ/パープル フリップ",
+    "オレンジ/ブルー フリップ",
+    "ホワイト/パープル フリップ",
+    "レッド/レインボー フリップ",
+    "ブルー/レインボー フリップ",
+    "ダークグリーンパール",
+    "ダークティールパール",
+    "ダークブルーパール",
+    "ダークパープルパール",
+    "オイルスリックパール",
+    "ライトグリーンパール",
+    "ライトブルーパール",
+    "ライトパープルパール",
+    "ライトピンクパール",
+    "オフホワイトパール",
+    "ピンクパール",
+    "イエローパール",
+    "グリーンパール",
+    "ブルーパール",
+    "クリームパール",
+    "ホワイトプリズマティック",
+    "グラファイトプリズマティック",
+    "ダークブループリズマティック",
+    "ダークパープルプリズマティック",
+    "ホットピンクプリズマティック",
+    "ダークレッドプリズマティック",
+    "ダークグリーンプリズマティック",
+    "ブラックプリズマティック",
+    "ブラック・オイルスピル",
+    "ブラック・レインボー",
+    "ブラック・ホログラフィック",
+    "ホワイト・ホログラフィック",
+    "モノクローム",
+    "ナイト／デイ",
+    "フェーリエル2",
+    "スプランク・エクストリーム",
+    "バイスシティ",
+    "シンセウェーブ",
+    "フォーシーズンズ",
+    "メゾネット9 スローバック",
+    "バブルガム",
+    "フルレインボー",
+    "サンセット",
+    "ザ・セブン",
+    "仮面ライダー",
+    "クローム・アバレーション",
+    "クリスマスだよ",
+    "気温",
+    "ハオ・スペシャルワークス",
+    "エレクトロ",
+    "モニカ",
+    "フブキ"
+];
+const orderChameleonNumbers = new Map(orderChameleonNames.map((name,index)=>[normalizePaintName(name),index+1]));
+
 function formatOrderColorDetail(item) {
     if (item.category !== 'カラー') return item.detail;
     const detail = item.detail;
-    const finish = /[（(【\[]\s*(メタリック|クラシック|マット|クローム|金属)\s*[）)】\]]/g;
+    const finish = /[（(【\[]\s*(メタリック|クラシック|マット|クローム|金属|カメレオン)\s*[）)】\]]/g;
     const match = finish.exec(detail);
     let colorName = detail.replace(finish, '').trim();
     if (/^\d+\s*[.．・:：\-]/.test(colorName)) return detail;
@@ -1149,6 +1235,8 @@ function formatOrderColorDetail(item) {
         number = orderMatteNumbers.get(normalized.replace(/^マット/, ''));
     } else if (match?.[1] === 'クローム' || match?.[1] === '金属' || (!match && orderChromeNumbers.has(normalized))) {
         number = orderChromeNumbers.get(normalized);
+    } else if (match?.[1] === 'カメレオン' || (!match && orderChameleonNumbers.has(normalized))) {
+        number = orderChameleonNumbers.get(normalized);
     } else if (match) {
         number = orderPaintNumbers.get(normalized);
     }
