@@ -8,20 +8,53 @@
  const time = value => `${value / 60n}時間${value % 60n}分`;
  let manual = false, serial = 0, lastResult = null;
  const storageKey = SiteAuth.access.discord_id ? 'mechanic-bonus-v1:' + SiteAuth.access.discord_id : null;
- let restoring = true, saveFailed = false;
+ let restoring = true, dirty = false, saving = false, sharedVersion = null;
+ const snapshot = () => ({version:1,budget:budget.value,rate:rate.value,manual,
+  rows:[...rows.children].map(row=>({name:row.querySelector('.employee-name').value,hours:row.querySelector('.hours').value,minutes:row.querySelector('.minutes').value,farm:row.querySelector('.farm').value}))});
  function save() {
-  if (restoring) return;
-  try {
-   if (!storageKey) throw Error('identity');
-   localStorage.setItem(storageKey, JSON.stringify({version:1,budget:budget.value,rate:rate.value,manual,
-    rows:[...rows.children].map(row => ({name:row.querySelector('.employee-name').value,hours:row.querySelector('.hours').value,minutes:row.querySelector('.minutes').value,farm:row.querySelector('.farm').value}))}));
-   saveFailed = false;
-   $('saveStatus').textContent = 'このブラウザに自動保存しました。';
-  } catch {
-   saveFailed = true;
-   $('saveStatus').textContent = '保存できませんでした。ページを離れる前に結果をコピーしてください。';
-  }
+  if(restoring)return;
+  dirty=true;
+  $('saveStatus').textContent='未保存の変更があります。「共有して保存」で3人に反映します。';
  }
+ function applyDraft(draft){
+  restoring=true; rows.replaceChildren(); serial=0;
+  budget.value=draft?.budget||'';rate.value=draft?.rate||'';manual=draft?.manual===true;
+  for(const saved of draft?.rows||[]){const row=addRow();
+   row.querySelector('.employee-name').value=saved.name;
+   row.querySelector('.hours').value=saved.hours;
+   row.querySelector('.minutes').value=saved.minutes;
+   row.querySelector('.farm').value=saved.farm||'0';
+  }
+  if(!draft)addRow();
+  update();restoring=false;dirty=false;
+ }
+ async function loadShared(force=false){
+  const before=JSON.stringify(snapshot());
+  const result=await SiteAuth.rpc('bonus_load');
+  if(JSON.stringify(snapshot())!==before||saving){$('saveStatus').textContent='読み込み中に入力が変更されたため、入力内容を残しました。';return result;}
+  if(force||(!dirty&&!saving&&result.version!==sharedVersion)){
+   sharedVersion=result.version;applyDraft(result.payload);
+   $('saveStatus').textContent=result.payload?'共有内容を読み込みました。':'共有データはまだありません。入力後に「共有して保存」を押してください。';
+  }
+  return result;
+ }
+ $('saveSharedBonus').onclick=async()=>{
+  if(saving||sharedVersion===null)return;
+  if(!lastResult){$('saveStatus').textContent='入力エラーを修正してから保存してください。';return;}
+  const draft=snapshot();saving=true;$('saveSharedBonus').disabled=true;
+  try{
+   const result=await SiteAuth.rpc('bonus_save',{p_payload:draft,p_version:sharedVersion});
+   sharedVersion=result.version;
+   dirty=JSON.stringify(snapshot())!==JSON.stringify(draft);
+   $('saveStatus').textContent=dirty?'保存しました。その後の入力変更はまだ未保存です。':'3人で共有する内容を保存しました。';
+  }catch(e){$('saveStatus').textContent=e.message?.includes('edit_conflict')?'他の人が先に保存しました。入力内容は残しています。必要なら結果をコピーし、「共有内容を更新」で最新内容を読み込んでください。':'共有保存に失敗しました。入力内容は残しています。通信を確認して再度保存してください。';}
+  finally{saving=false;$('saveSharedBonus').disabled=false;}
+ };
+ $('reloadSharedBonus').onclick=async()=>{
+  if(saving)return;
+  if(dirty&&!confirm('未保存の変更を破棄し、共有されている最新内容に置き換えますか？'))return;
+  try{await loadShared(true);$('saveSharedBonus').disabled=false;}catch{$('saveStatus').textContent='共有内容を読み込めませんでした。再度更新してください。';}
+ };
  function integer(input) {
   if (!input.value.trim()) return 0n;
   if (!/^\d+$/.test(input.value) || !input.checkValidity()) return null;
@@ -75,7 +108,7 @@
  rate.addEventListener('input', () => { manual = true; update(); });
  $('autoRate').onclick = () => { manual = false; update(); };
  $('resetBonus').onclick = () => {
-  if (!confirm('名前と並び順を残して、全員の出勤時間・総支給額・時給・ファームボーナスをリセットしますか？保存内容も更新されます。')) return;
+  if (!confirm('名前と並び順を残して、全員の出勤時間・総支給額・時給・ファームボーナスをリセットしますか？共有内容への反映には「共有して保存」が必要です。')) return;
   budget.value = '';
   rate.value = '';
   manual = false;
@@ -100,35 +133,26 @@
   try { await navigator.clipboard.writeText(lines.join('\n')); $('bonusStatus').textContent = '計算結果をコピーしました。'; }
   catch { $('bonusStatus').textContent = 'コピーできませんでした。画面の結果を選択してコピーしてください。'; }
  };
- // Drafts stay in this browser and are loaded only after the bonus access check.
- window.addEventListener('beforeunload', event => {
-  if (saveFailed) {event.preventDefault();event.returnValue='';}
- });
- window.addEventListener('pagehide', () => {app.hidden=true;rows.replaceChildren();budget.value='';rate.value='';lastResult=null;});
- window.addEventListener('pageshow', event => {if(event.persisted)location.reload();});
- try {
-  const raw = storageKey && localStorage.getItem(storageKey);
-  if (raw) {
-   const draft = JSON.parse(raw);
-   if (draft.version !== 1 || typeof draft.budget !== 'string' || typeof draft.rate !== 'string' || typeof draft.manual !== 'boolean' || !Array.isArray(draft.rows) || !draft.rows.every(row => row && ['name','hours','minutes'].every(key => typeof row[key] === 'string'))) throw Error('draft');
-   budget.value = draft.budget;
-   manual = draft.manual;
-   rate.value = draft.rate;
-   for (const saved of draft.rows) {
-    const row = addRow();
-    row.querySelector('.employee-name').value = saved.name;
-    row.querySelector('.hours').value = saved.hours;
-    row.querySelector('.minutes').value = saved.minutes;
-    row.querySelector('.farm').value = typeof saved.farm === 'string' ? saved.farm : '0';
-   }
-   $('saveStatus').textContent = '前回の入力内容を復元しました。';
-  } else {
-   addRow();
-   $('saveStatus').textContent = '入力すると、このブラウザに自動保存します。';
+ window.addEventListener('beforeunload',event=>{if(dirty||saving){event.preventDefault();event.returnValue='';}});
+ window.addEventListener('pagehide',()=>{app.hidden=true;rows.replaceChildren();budget.value='';rate.value='';lastResult=null;});
+ window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});
+ app.hidden=false;$('saveSharedBonus').disabled=true;
+ try{
+  const result=await loadShared(true);
+  // Only offer the owner's original local draft when no shared record exists.
+  if(!result.payload&&SiteAuth.access.role==='owner'){
+   try{
+    const raw=storageKey&&localStorage.getItem(storageKey);const draft=raw&&JSON.parse(raw);
+    if(draft?.version===1&&typeof draft.budget==='string'&&typeof draft.rate==='string'&&Array.isArray(draft.rows)){
+     applyDraft(draft);dirty=true;
+     $('saveStatus').textContent='このブラウザに保存されていた内容を復元しました。「共有して保存」で3人に共有できます。';
+    }
+   }catch{$('saveStatus').textContent='以前のブラウザ保存を読み込めませんでした。元の保存データは残しています。';}
   }
- } catch {
-  if (!rows.children.length) addRow();
-  $('saveStatus').textContent = '前回の保存内容を読み込めませんでした。新しく入力すると保存内容を更新します。';
- }
- update(); restoring = false; app.hidden = false;
+  $('saveSharedBonus').disabled=false;
+ }catch{$('saveStatus').textContent='共有データを読み込めませんでした。「共有内容を更新」を押してください。';}
+ setInterval(async()=>{
+  if(document.visibilityState!=='visible'||dirty||saving||sharedVersion===null)return;
+  try{await loadShared();}catch{$('saveStatus').textContent='共有内容の更新に失敗しました。通信状況を確認してください。';}
+ },10000);
 })();
