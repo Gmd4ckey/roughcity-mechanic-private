@@ -2,6 +2,7 @@
 
 .craft-page table{min-width:0;table-layout:fixed}.craft-page th,.craft-page td{white-space:normal;overflow-wrap:anywhere;padding:10px 8px}.craft-page th:first-child{width:24%}.craft-page th:last-child{width:132px}.craft-table-scroll{overflow-x:hidden}.craft-page main,.craft-page section{min-width:0;box-sizing:border-box}
 /* Keep the original table at every width, with compact columns. */
+.craft-page section[aria-labelledby="totalTitle"]{position:sticky;top:8px;z-index:10;box-shadow:0 6px 18px #0003}
 .craft-page th:first-child{width:24%}
 .craft-page th:nth-child(2){width:6%}
 .craft-page th:last-child{width:16%}
