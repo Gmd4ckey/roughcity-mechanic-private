@@ -47,6 +47,12 @@ const colorCount =
     document.getElementById("colorCount");
 
 
+const citizenExteriorCount = document.getElementById('citizenExteriorCount');
+const citizenColorCount = document.getElementById('citizenColorCount');
+createCountOptions(citizenExteriorCount,50);
+createCountOptions(citizenColorCount,20);
+[citizenExteriorCount,citizenColorCount].forEach(select=>select.addEventListener('change',()=>{calculateTotal();saveMechanicState();}));
+
 const priceItems =
     document.querySelectorAll(".price-item");
 
@@ -364,6 +370,8 @@ function getBillingLines() {
     });
     add('外装カスタム', Number(exteriorCount.value), 800000, '外装・カラー', 'exterior');
     add('カラー', Number(colorCount.value), 200000, '外装・カラー', 'color');
+    add('白市民外装カスタム', Number(citizenExteriorCount.value), 640000, '外装・カラー', 'citizenExterior');
+    add('白市民カラー', Number(citizenColorCount.value), 160000, '外装・カラー', 'citizenColor');
     saleQuantities.forEach(input => add(
         input.closest('.sales-item').querySelector('strong').textContent.trim(),
         Math.max(0, Number(input.value) || 0), Number(input.dataset.price), '販売', 'sale'));
@@ -479,6 +487,8 @@ repairQuantities.forEach((input) => {
 function saveMechanicState() {
 
     const state = {
+        citizenExteriorCount: citizenExteriorCount.value,
+        citizenColorCount: citizenColorCount.value,
 
         orderInput:
             orderInput.value,
@@ -1434,6 +1444,9 @@ function restoreMechanicState() {
         }
 
 
+        citizenExteriorCount.value = String(Math.min(50,Math.max(0,Math.floor(Number(state.citizenExteriorCount)||0))));
+        citizenColorCount.value = String(Math.min(20,Math.max(0,Math.floor(Number(state.citizenColorCount)||0))));
+
         // 外装
 
         if (
@@ -1967,6 +1980,8 @@ resetButton.addEventListener(
         );
 
 
+        citizenExteriorCount.value = '0';
+        citizenColorCount.value = '0';
         // 外装 / カラー
 
         exteriorCount.value =
