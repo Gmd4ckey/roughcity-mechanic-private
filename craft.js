@@ -43,4 +43,59 @@
  try{document.body.classList.toggle('dark',localStorage.getItem('theme')==='dark');}catch{}
  $('themeButton').onclick=()=>{document.body.classList.toggle('dark');try{localStorage.setItem('theme',document.body.classList.contains('dark')?'dark':'light');}catch{}};
  total();
+ // Stable recipe keys distinguish alternate recipes and survive reordering.
+ const recipeKey=r=>JSON.stringify([r.category,r.name,r.tier,r.note]);
+ let sets=[],storageKey;
+ const status=message=>{$('craftSetStatus').textContent=message;};
+ const selected=()=>sets.find(set=>set.id===$('craftSetSelect').value);
+ function selection(){
+  const set=selected();
+  $('craftSetLoad').disabled=!set;$('craftSetDelete').disabled=!set;
+  $('craftSetPreview').textContent=set?set.items.map(item=>{
+   const r=recipes.find(r=>recipeKey(r)===item.key);
+   return (r?r.name+(r.tier?' Tier '+r.tier:'')+(r.note?'（'+r.note+'）':''):'未対応のアイテム')+' × '+item.quantity;
+  }).join(' ／ '):'';
+ }
+ function renderSets(id=''){
+  $('craftSetSelect').replaceChildren(new Option('セットを選択',''),...sets.map(set=>new Option(set.name,set.id)));
+  $('craftSetSelect').value=id;selection();
+ }
+ function persist(next){
+  try{localStorage.setItem(storageKey,JSON.stringify(next));sets=next;return true;}
+  catch{status('保存できませんでした。ブラウザの保存設定や空き容量をご確認ください。');return false;}
+ }
+ $('craftSetSelect').onchange=selection;
+ $('craftSetSave').onclick=()=>{
+  const name=$('craftSetName').value.trim();
+  if(!name){status('セット名を入力してください。');return;}
+  const items=recipes.flatMap((r,i)=>quantities[i]>0?[{key:recipeKey(r),quantity:quantities[i]}]:[]);
+  if(!items.length){status('保存するアイテムの個数を1個以上にしてください。');return;}
+  const old=sets.find(set=>set.name===name);
+  if(old&&!confirm('「'+name+'」を現在の個数で上書きしますか？'))return;
+  const set={id:old?.id||crypto.randomUUID(),name,items};
+  const next=old?sets.map(s=>s.id===old.id?set:s):[...sets,set];
+  if(persist(next)){renderSets(set.id);status('「'+name+'」を保存しました。');}
+ };
+ $('craftSetLoad').onclick=()=>{
+  const set=selected();if(!set)return;
+  if(set.items.some(item=>!recipes.some(r=>recipeKey(r)===item.key))){status('現在の一覧にないアイテムが含まれるため、呼び出せません。');return;}
+  if(quantities.some(n=>n>0)&&!confirm('現在の作成個数を「'+set.name+'」の内容で置き換えますか？'))return;
+  recipes.forEach((r,i)=>{quantities[i]=set.items.find(item=>item.key===recipeKey(r))?.quantity||0;rows[i].querySelector('input').value=String(quantities[i]);rows[i].classList.toggle('chosen',quantities[i]>0);});
+  $('craftSearch').value='';$('craftCategory').value='';filter();total();
+  $('craftSetName').value=set.name;status('「'+set.name+'」を呼び出しました。');
+ };
+ $('craftSetDelete').onclick=()=>{
+  const set=selected();if(!set||!confirm('保存したセット「'+set.name+'」を削除しますか？現在の作成個数は残ります。'))return;
+  if(persist(sets.filter(s=>s.id!==set.id))){renderSets();status('セットを削除しました。');}
+ };
+ SiteAuth.ready.then(()=>{
+  const access=SiteAuth.access;
+  if(!['owner','admin','member'].includes(access?.role)||!access.discord_id)return;
+  storageKey='mechanic-craft-sets-v1:'+access.discord_id;
+  try{
+   const raw=localStorage.getItem(storageKey),saved=raw?JSON.parse(raw):[];
+   if(!Array.isArray(saved)||!saved.every(s=>s&&typeof s.id==='string'&&typeof s.name==='string'&&Array.isArray(s.items)&&s.items.every(i=>typeof i.key==='string'&&Number.isInteger(i.quantity)&&i.quantity>0&&i.quantity<=9999)))throw Error('invalid');
+   sets=saved;renderSets();$('craftSetSave').disabled=false;
+  }catch{status('保存済みセットを読み込めませんでした。保存内容を保護するため登録を停止しています。');}
+ }).catch(()=>status('ログインを確認できませんでした。'));
 })();
