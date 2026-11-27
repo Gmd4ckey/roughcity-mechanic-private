@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ボーナス計算</title>
+<link rel="stylesheet" href="site-auth.css?v=20261127-bonus"><script src="colors-config.js"></script><script src="site-auth.js?v=20261127-bonus"></script>
+<link rel="stylesheet" href="bonus.css?v=20261127"><script src="bonus-calc.js?v=20261127" defer></script><script src="bonus.js?v=20261127" defer></script></head>
+<body class="bonus-page"><main id="bonusApp" hidden>
+<a href="index.html">← メカニックへ戻る</a>
+<header><div><p class="eyebrow">オーナー専用</p><h1>ボーナス計算</h1></div><button type="button" id="copyBonus">結果をコピー</button></header>
+<p class="notice">名前・出勤時間はこの画面で手入力します。勤怠管理とは連携しません。入力内容は保存・送信されず、再読み込みやページを離れると消えます。</p>
+<section class="settings"><label>総支給額（予算・円）<input id="bonusBudget" type="number" min="0" max="999999999999" step="1" inputmode="numeric" placeholder="例：100000000" autocomplete="off"></label>
+<div><label>1時間あたりの支給額（円）<input id="bonusRate" type="number" min="0" max="999999999999" step="1" inputmode="numeric" placeholder="出勤時間を入力すると自動計算" autocomplete="off"></label><button type="button" id="autoRate">自動計算に戻す</button><p id="rateNote" class="muted"></p></div></section>
+<p class="muted">総支給額 ÷ 全員の合計出勤時間で時給を計算します。時給は手入力で修正できます。自動時給・各人の支給額は1円未満を切り捨て、残額は再配分しません。</p>
+<section class="totals" aria-live="polite"><div>合計出勤時間<strong id="totalHours">0時間0分</strong></div><div>実際の支給合計<strong id="totalPaid">¥0</strong></div><div>残額<strong id="remaining">¥0</strong></div></section>
+<p id="bonusWarning" role="alert" hidden></p>
+<section><div class="list-heading"><h2>従業員ごとの支給額</h2><button type="button" id="addBonusRow">＋ 従業員を追加</button></div><div id="bonusRows"></div></section>
+<p id="bonusStatus" role="status"></p>
+</main></body></html>

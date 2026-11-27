@@ -2,6 +2,7 @@
 (() => {
  'use strict';
  const loginPage=location.pathname.endsWith('/login.html');
+ const ownerPage=location.pathname.endsWith('/bonus.html');
  const base=new URL('./',location.href);
  let client,access,checking=false;
  const text=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value;};
@@ -11,7 +12,9 @@
  async function rpc(name,args){const {data,error}=await client.rpc(name,args);if(error)throw error;return data;}
  async function refresh(){
   if(checking)return access;checking=true;
-  try{access=await rpc('site_access');if(!loginPage&&!['owner','admin','member'].includes(access.role))lock();return access;}
+  try{access=await rpc('site_access');if(!loginPage&&!['owner','admin','member'].includes(access.role))lock();
+   if(ownerPage&&access.role!=='owner'){document.documentElement.classList.remove('site-authorized');document.getElementById('bonusApp')?.replaceChildren();location.replace(new URL('index.html',base));}
+   return access;}
   catch(e){if(!loginPage)lock();throw e;}finally{checking=false;}
  }
  async function token(){
@@ -41,6 +44,7 @@
   }
   const role=document.createElement('span');role.textContent={owner:'オーナー',admin:'管理者',member:'メンバー'}[access.role];nav.append(role);
   if(['owner','admin'].includes(access.role)){const a=document.createElement('a');a.href='members.html';a.textContent='メンバー管理';nav.append(a);}
+  if(access.role==='owner'){const a=document.createElement('a');a.href='bonus.html';a.textContent='ボーナス計算';nav.append(a);}
   const button=document.createElement('button');button.type='button';button.textContent='ログアウト';button.onclick=()=>logout().catch(()=>text('authMessage','ログアウトに失敗しました。'));nav.append(button);
   document.body.prepend(nav);
  }
@@ -64,7 +68,7 @@
      text('authMessage',access.role==='blocked'?'現在、利用が許可されていません。管理者へ連絡してください。':access.role==='pending'?'承認待ちです。管理者の承認後に「承認状況を確認」を押してください。':'ログインできました。利用申請を送ってください。');
      document.getElementById('requestAccess').hidden=access.role!=='unregistered';
      document.getElementById('refreshAccess').hidden=false;
-    }else if(['owner','admin','member'].includes(access.role)){
+    }else if(['owner','admin','member'].includes(access.role)&&(!ownerPage||access.role==='owner')){
      document.documentElement.classList.add('site-authorized');addNavigation();
      setInterval(()=>{if(document.visibilityState==='visible')refresh().catch(()=>{});},15000);
      document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh().catch(()=>{});});
