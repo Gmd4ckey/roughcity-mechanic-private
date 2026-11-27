@@ -1,7 +1,7 @@
 (async () => {
  'use strict';
  await SiteAuth.ready;
- if (SiteAuth.access?.role !== 'owner') return;
+ if (!SiteAuth.canUseBonus()) return;
  const $ = id => document.getElementById(id);
  const app = $('bonusApp'), budget = $('bonusBudget'), rate = $('bonusRate'), rows = $('bonusRows');
  const yen = value => '¥' + value.toLocaleString('ja-JP');
@@ -100,7 +100,7 @@
   try { await navigator.clipboard.writeText(lines.join('\n')); $('bonusStatus').textContent = '計算結果をコピーしました。'; }
   catch { $('bonusStatus').textContent = 'コピーできませんでした。画面の結果を選択してコピーしてください。'; }
  };
- // Drafts stay in this browser and are loaded only after the owner role check.
+ // Drafts stay in this browser and are loaded only after the bonus access check.
  window.addEventListener('beforeunload', event => {
   if (saveFailed) {event.preventDefault();event.returnValue='';}
  });
