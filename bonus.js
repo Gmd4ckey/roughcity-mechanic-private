@@ -7,6 +7,21 @@
  const yen = value => '¥' + value.toLocaleString('ja-JP');
  const time = value => `${value / 60n}時間${value % 60n}分`;
  let manual = false, serial = 0, lastResult = null;
+ const storageKey = SiteAuth.access.discord_id ? 'mechanic-bonus-v1:' + SiteAuth.access.discord_id : null;
+ let restoring = true, saveFailed = false;
+ function save() {
+  if (restoring) return;
+  try {
+   if (!storageKey) throw Error('identity');
+   localStorage.setItem(storageKey, JSON.stringify({version:1,budget:budget.value,rate:rate.value,manual,
+    rows:[...rows.children].map(row => ({name:row.querySelector('.employee-name').value,hours:row.querySelector('.hours').value,minutes:row.querySelector('.minutes').value}))}));
+   saveFailed = false;
+   $('saveStatus').textContent = 'このブラウザに自動保存しました。';
+  } catch {
+   saveFailed = true;
+   $('saveStatus').textContent = '保存できませんでした。ページを離れる前に結果をコピーしてください。';
+  }
+ }
  function integer(input) {
   if (!input.value.trim()) return 0n;
   if (!/^\d+$/.test(input.value) || !input.checkValidity()) return null;
@@ -27,6 +42,7 @@
    lastResult = null;
    for (const id of ['totalHours','totalPaid','remaining']) $(id).textContent = '—';
    entries.forEach(row => row.querySelector('output').textContent = '—');
+   save();
    return;
   }
   lastResult = BonusMath.calculate(amount, durations, override);
@@ -41,6 +57,7 @@
    $('bonusWarning').hidden = false;
    $('bonusWarning').textContent = `支給合計が予算を ${yen(-lastResult.remaining)} 超えています。時給または出勤時間を確認してください。`;
   }
+  save();
  }
  function addRow() {
   const id = ++serial, row = document.createElement('div'); row.className = 'bonus-row';
@@ -69,11 +86,34 @@
   try { await navigator.clipboard.writeText(lines.join('\n')); $('bonusStatus').textContent = '計算結果をコピーしました。'; }
   catch { $('bonusStatus').textContent = 'コピーできませんでした。画面の結果を選択してコピーしてください。'; }
  };
- // Never persist employee names or payments in browser storage or transmit them.
+ // Drafts stay in this browser and are loaded only after the owner role check.
  window.addEventListener('beforeunload', event => {
-  if (budget.value || [...rows.querySelectorAll('.employee-name')].some(input => input.value) || lastResult?.totalMinutes > 0n) {event.preventDefault();event.returnValue='';}
+  if (saveFailed) {event.preventDefault();event.returnValue='';}
  });
  window.addEventListener('pagehide', () => {app.hidden=true;rows.replaceChildren();budget.value='';rate.value='';lastResult=null;});
  window.addEventListener('pageshow', event => {if(event.persisted)location.reload();});
- addRow(); app.hidden = false;
+ try {
+  const raw = storageKey && localStorage.getItem(storageKey);
+  if (raw) {
+   const draft = JSON.parse(raw);
+   if (draft.version !== 1 || typeof draft.budget !== 'string' || typeof draft.rate !== 'string' || typeof draft.manual !== 'boolean' || !Array.isArray(draft.rows) || !draft.rows.every(row => row && ['name','hours','minutes'].every(key => typeof row[key] === 'string'))) throw Error('draft');
+   budget.value = draft.budget;
+   manual = draft.manual;
+   rate.value = draft.rate;
+   for (const saved of draft.rows) {
+    const row = addRow();
+    row.querySelector('.employee-name').value = saved.name;
+    row.querySelector('.hours').value = saved.hours;
+    row.querySelector('.minutes').value = saved.minutes;
+   }
+   $('saveStatus').textContent = '前回の入力内容を復元しました。';
+  } else {
+   addRow();
+   $('saveStatus').textContent = '入力すると、このブラウザに自動保存します。';
+  }
+ } catch {
+  if (!rows.children.length) addRow();
+  $('saveStatus').textContent = '前回の保存内容を読み込めませんでした。新しく入力すると保存内容を更新します。';
+ }
+ update(); restoring = false; app.hidden = false;
 })();
