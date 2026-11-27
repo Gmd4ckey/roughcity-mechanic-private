@@ -73,6 +73,18 @@
  budget.addEventListener('input', update);
  rate.addEventListener('input', () => { manual = true; update(); });
  $('autoRate').onclick = () => { manual = false; update(); };
+ $('resetBonus').onclick = () => {
+  if (!confirm('名前と並び順を残して、全員の出勤時間・総支給額・時給をリセットしますか？保存内容も更新されます。')) return;
+  budget.value = '';
+  rate.value = '';
+  manual = false;
+  for (const row of rows.children) {
+   row.querySelector('.hours').value = '0';
+   row.querySelector('.minutes').value = '0';
+  }
+  update();
+  $('bonusStatus').textContent = '名前を残して、出勤時間・総支給額・時給をリセットしました。';
+ };
  $('addBonusRow').onclick = () => addRow().querySelector('input').focus();
  $('copyBonus').onclick = async () => {
   if (!lastResult) return;
