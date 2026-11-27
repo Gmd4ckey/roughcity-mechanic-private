@@ -11,7 +11,7 @@
     <title>ラフシティメカニック</title>
 
     <link rel="stylesheet" href="style.css?v=20261116-cleanup">
-<link rel="stylesheet" href="mechanic-layout.css?v=20261120-quantity">
+<link rel="stylesheet" href="mechanic-layout.css?v=20261128-performance-discount">
 <link rel="stylesheet" href="theme-ui.css?v=20261105-2">
 </head>
 
@@ -367,56 +367,10 @@
             </div>
 
 
-            <div class="sales-item">
-
-                <div class="sales-info">
-
-                    <strong>
-                        ニトロ缶
-                    </strong>
-
-                    <span>
-                        ¥3,000,000
-                    </span>
-
-                </div>
-
-                <input
-                    type="number"
-                    class="sale-quantity"
-                    data-price="3000000"
-                    min="0"
-                    step="1"
-                    value="0"
-                 aria-label="数量">
-
-            </div>
+            
 
 
-            <div class="sales-item">
-
-                <div class="sales-info">
-
-                    <strong>
-                        ニトロ補充
-                    </strong>
-
-                    <span>
-                        ¥1,500,000
-                    </span>
-
-                </div>
-
-                <input
-                    type="number"
-                    class="sale-quantity"
-                    data-price="1500000"
-                    min="0"
-                    step="1"
-                    value="0"
-                 aria-label="数量">
-
-            </div>
+            
 
         </div>
 
@@ -470,7 +424,7 @@
 </section>
 <details class="mechanic-fold performance-section">
 
-            <summary><span>性能カスタム</span><small>レベル・追加パーツを選ぶ</small></summary><div class="fold-content">
+            <summary><span>性能カスタム</span><small>レベル・追加パーツを選ぶ</small></summary><div class="fold-content"><div class="citizen-discount-panel"><label><input type="checkbox" id="performanceCitizenDiscount"> 白市民割引（20％OFF）</label><p>チェックすると、この欄で選択した性能カスタム料金を20％割引します。</p></div>
 
             <div class="performance-grid">
 
@@ -678,11 +632,9 @@
                 <label>
                     <input type="checkbox" class="price-item" data-price="4500000"><span class="option-name">ターボ</span><span class="option-price">¥4,500,000</span></label>
 
-                <label>
-                    <input type="checkbox" class="price-item" data-price="3000000"><span class="option-name">ニトロ新規</span><span class="option-price">¥3,000,000</span></label>
+                
 
-                <label>
-                    <input type="checkbox" class="price-item" data-price="1500000"><span class="option-name">ニトロ交換</span><span class="option-price">¥1,500,000</span></label>
+                
 
                 <label>
                     <input type="checkbox" class="price-item" data-price="3000000"><span class="option-name">ハーネス</span><span class="option-price">¥3,000,000</span></label>
@@ -708,7 +660,7 @@
 <div id="breakdownContent"></div>
 <div class="breakdown-total"><span>請求合計額</span><strong id="breakdownTotal">¥0</strong></div>
 </div>
-<script src="script.js?v=20261128-citizen-colors"></script>
+<script src="script.js?v=20261128-performance-discount"></script>
 
 <script src="theme-ui.js?v=20261023-1"></script>
 <div id="fullCustomInfo" popover aria-labelledby="fullCustomInfoTitle">

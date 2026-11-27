@@ -53,6 +53,9 @@ createCountOptions(citizenExteriorCount,50);
 createCountOptions(citizenColorCount,20);
 [citizenExteriorCount,citizenColorCount].forEach(select=>select.addEventListener('change',()=>{calculateTotal();saveMechanicState();}));
 
+const performanceCitizenDiscount = document.getElementById('performanceCitizenDiscount');
+performanceCitizenDiscount.addEventListener('change',()=>{calculateTotal();saveMechanicState();});
+const performanceItemKey = item => (item.name || 'extra') + ':' + item.closest('label').querySelector('.option-name').textContent.trim();
 const priceItems =
     document.querySelectorAll(".price-item");
 
@@ -368,6 +371,10 @@ function getBillingLines() {
         const part = item.closest('.performance-row')?.querySelector('.part-name').textContent.trim();
         add(part ? part + ' ' + option : option, 1, Number(item.dataset.price), '性能カスタム', item.name || option);
     });
+    if (performanceCitizenDiscount.checked) {
+        const performanceTotal = lines.filter(line=>line.group==='性能カスタム').reduce((sum,line)=>sum+line.subtotal,0);
+        if(performanceTotal>0) add('白市民割引（性能カスタム20％）',1,-Math.round(performanceTotal/5),'性能カスタム','performanceDiscount');
+    }
     add('外装カスタム', Number(exteriorCount.value), 800000, '外装・カラー', 'exterior');
     add('カラー', Number(colorCount.value), 200000, '外装・カラー', 'color');
     add('白市民外装カスタム', Number(citizenExteriorCount.value), 640000, '外装・カラー', 'citizenExterior');
@@ -419,8 +426,6 @@ function getDuplicateWarnings(lines, items) {
         if (full.quantity > 1) warnings.push(full.name + 'の数量が ' + full.quantity + ' です。台数をご確認ください。');
     }
     if (fullOptions.length > 1) warnings.push('フルカスタムのプランが複数入力されています。台数・対象をご確認ください。');
-    if (lines.filter(line => line.name === 'ニトロ補充').length > 1) warnings.push('ニトロ補充が「修理・補充」と「販売」の両方で入力されています。');
-    if (lines.filter(line => line.name === 'ニトロ新規').length > 1) warnings.push('ニトロ新規が「修理・補充」と「性能カスタム」の両方で入力されています。');
     const counts = new Map();
     items.forEach(item => {
         const key = item.category + '\u0000' + item.name;
@@ -487,6 +492,7 @@ repairQuantities.forEach((input) => {
 function saveMechanicState() {
 
     const state = {
+        performanceCitizenDiscount: performanceCitizenDiscount.checked,
         citizenExteriorCount: citizenExteriorCount.value,
         citizenColorCount: citizenColorCount.value,
 
@@ -504,6 +510,7 @@ function saveMechanicState() {
                 (item) => {
 
                     return {
+                        key: performanceItemKey(item),
                         checked:
                             item.checked
                     };
@@ -1415,6 +1422,13 @@ function restoreMechanicState() {
         }
 
 
+        performanceCitizenDiscount.checked = state.performanceCitizenDiscount === true;
+        const savedPerformance = Array.isArray(state.priceItems) ? state.priceItems.slice() : [];
+        if(savedPerformance.length && !savedPerformance.some(item=>item?.key)){
+            // Remove the former nitro slots without shifting harness and later selections.
+            savedPerformance.splice(36,1);
+            savedPerformance.splice(35,1);
+        }
         // 性能カスタム
 
         if (
@@ -1427,7 +1441,7 @@ function restoreMechanicState() {
                 (item, index) => {
 
                     const savedItem =
-                        state.priceItems[index];
+                        savedPerformance.some(entry=>entry?.key) ? savedPerformance.find(entry=>entry.key===performanceItemKey(item)) : savedPerformance[index];
 
 
                     if (
@@ -1980,6 +1994,7 @@ resetButton.addEventListener(
         );
 
 
+        performanceCitizenDiscount.checked = false;
         citizenExteriorCount.value = '0';
         citizenColorCount.value = '0';
         // 外装 / カラー

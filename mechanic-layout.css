@@ -135,3 +135,4 @@ body.dark .duplicate-notice { background: #302719; color: #f2d598; }
 .mechanic-page .quantity-control:focus-within{outline:2px solid #a541b5;outline-offset:2px}
 .mechanic-page .quantity-control button:focus-visible{outline:2px solid #a541b5;outline-offset:-3px}
 @media(max-width:600px){.mechanic-page .repair-item{flex-direction:column;align-items:flex-start;justify-content:space-between;gap:8px}}
+.citizen-discount-panel{padding:14px 16px;margin:0 0 18px;border:1px solid var(--border,#555);border-radius:10px;background:rgba(140,41,156,.1)}.citizen-discount-panel label{display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer}.citizen-discount-panel input{width:20px;height:20px;accent-color:#8c299c}.citizen-discount-panel p{margin:6px 0 0;font-size:13px}
